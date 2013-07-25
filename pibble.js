@@ -266,7 +266,7 @@
 
   // Export the jQuery plugin definition
   $.fn.Pibble = function(options) {
-    var opts = $.extend({}, $.fn.Pibble.defaults, options);
+    var opts = $.extend(true, {}, $.fn.Pibble.defaults, options);
 
     return this.each(function() {
       var $this = $(this);
