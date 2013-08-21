@@ -2,6 +2,10 @@
   padding: 1px;
 }
 
+.pibble {
+  min-height: 50px;
+}
+
 .pibble-toolbar li {
   cursor: pointer;
 

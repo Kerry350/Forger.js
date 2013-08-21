@@ -253,6 +253,7 @@
     },
 
     elementIsEmpty: function() {
+      console.log(this.element[0].innerHTML.trim())
       return (this.element[0].innerHTML.trim() === '') ? true : false;
     },
 
