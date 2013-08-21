@@ -38,11 +38,8 @@
   var Pibble = function(el, options) {
     this.options = options;
     this.id = id++;
-    this.baseClass = 'pibble-' + this.id;
-    this.menuSelectionInProgress = false;
-
     this.element = $(el);
-    
+    this.setInitialProperties();
     this.init();
 
     return this;
@@ -51,10 +48,18 @@
   Pibble.prototype = {
     init: function() {
       this.element.addClass(this.baseClass);
+      this.element.addClass('pibble');
       this.addEventListeners();
       this.setBaseAttributes();
       this.setUpToolbar();
+      this.emptyCheck();
       return this;
+    },
+
+    setInitialProperties: function() {
+      this.baseClass = 'pibble-' + this.id;
+      this.menuSelectionInProgress = false;
+      this.placeholderActive = false;
     },
 
     setUpToolbar: function() {
@@ -128,7 +133,11 @@
 
     addEventListeners: function() {
       var self = this;
-
+      
+      $(document).on('keyup.' + this.baseClass, this.element, function(e) {
+        self.handleKeyup(e);
+      });
+      
       $(document).on('mouseup.' + this.baseClass, '.' + this.baseClass, function(e) {
         self.handleMouseUp(e);
       });
@@ -161,7 +170,7 @@
         // Check the selection contains text, rather than just the cursor
         // Mouseup fires too quickly, hence the timeout
         window.setTimeout(function() {
-          if (selection.type !== 'Caret') {
+          if ((selection.type && selection.type !== 'Caret') || (!selection.isCollapsed)) {
             cb(selection);
           }
 
@@ -229,6 +238,52 @@
       this.toolbar.hide();
     },
 
+    cleanContent: function() {
+      this.element.find('div').contents().unwrap().wrap('<p/>');  
+    },
+
+    handleKeyup: function(e) {
+      var self = this;
+      
+      this.emptyCheck();
+      
+      if ((e.keyCode === 13) && (this.options.mode === 'inline')) {
+        e.preventDefault();
+      }
+    },
+
+    elementIsEmpty: function() {
+      return (this.element[0].innerHTML === '') ? true : false;
+    },
+
+    emptyCheck: function(e) {
+      if (this.elementIsEmpty()) {
+        console.log("el: Is empty");
+        var p = document.createElement('p');
+        p.contentEditable = false;
+        p.innerText = 'Text';
+        this.element[0].appendChild(p);
+        var p = document.createElement('p');
+        p.innerText = ' ';
+        this.element[0].appendChild(p);
+        this.refocus(p);
+      }
+
+      else {
+
+      }
+    },
+
+    refocus: function(el) {
+      var sel = window.getSelection();
+      var range = document.createRange();
+      range.setStart(el, 0);
+      range.collapse(true);
+      sel.removeAllRanges();
+      sel.addRange(range);
+      console.log(range);
+    },
+
     getContent: function(contentType) {
       return this['get' + contentType]();
     },
@@ -286,6 +341,8 @@
   // Plugin defaults
   $.fn.Pibble.defaults = {
     returnFormat: 'Markdown',
+    mode: 'regular',
+    placeholder: "<p contentEditable='false'>Text</p><p> </p>",
     formattingOptions: {
       bold: {
         name: 'bold',
