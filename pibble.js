@@ -243,6 +243,7 @@
     },
 
     handleKeyup: function(e) {
+      console.log("keyup")
       var self = this;
       
       this.emptyCheck();
@@ -253,24 +254,37 @@
     },
 
     elementIsEmpty: function() {
-      return (this.element[0].innerHTML === '') ? true : false;
+      return (this.element[0].innerHTML.trim() === '') ? true : false;
     },
 
     emptyCheck: function(e) {
+      // Element is empty, so insert a placeholder <p> element
       if (this.elementIsEmpty()) {
-        console.log("el: Is empty");
         var p = document.createElement('p');
         p.contentEditable = false;
         p.innerText = 'Text';
         this.element[0].appendChild(p);
+        this.placeholderEl = p;
+
         var p = document.createElement('p');
         p.innerText = ' ';
         this.element[0].appendChild(p);
+
+        this.snapshot = this.element[0].innerHTML.trim();
+
         this.refocus(p);
       }
 
+      // Not empty
       else {
 
+        // Check if current content matches the content of the placeholder at the time of insertion,
+        // if not, and there is actually an active placeholder, remove it. 
+        if ((this.placeholderEl) && (this.element[0].innerHTML.trim() != this.snapshot)) {
+          this.placeholderEl.parentNode.removeChild(this.placeholderEl);
+          this.placeholderEl = null; // We've removed it, so nullify our internal reference too
+        }
+        
       }
     },
 
