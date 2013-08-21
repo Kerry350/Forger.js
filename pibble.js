@@ -59,7 +59,6 @@
     setInitialProperties: function() {
       this.baseClass = 'pibble-' + this.id;
       this.menuSelectionInProgress = false;
-      this.placeholderActive = false;
     },
 
     setUpToolbar: function() {
@@ -258,16 +257,18 @@
     },
 
     emptyCheck: function(e) {
+      console.log("doing empty check")
       // Element is empty, so insert a placeholder <p> element
       if (this.elementIsEmpty()) {
+        console.log("is empty")
         var p = document.createElement('p');
         p.contentEditable = false;
-        p.innerText = 'Text';
+        p.appendChild(document.createTextNode("text"));
         this.element[0].appendChild(p);
         this.placeholderEl = p;
 
         var p = document.createElement('p');
-        p.innerText = ' ';
+        
         this.element[0].appendChild(p);
 
         this.snapshot = this.element[0].innerHTML.trim();
@@ -277,10 +278,13 @@
 
       // Not empty
       else {
+        console.log("is not empty")
 
         // Check if current content matches the content of the placeholder at the time of insertion,
         // if not, and there is actually an active placeholder, remove it. 
         if ((this.placeholderEl) && (this.element[0].innerHTML.trim() != this.snapshot)) {
+          console.log("not matching, no need el")
+
           this.placeholderEl.parentNode.removeChild(this.placeholderEl);
           this.placeholderEl = null; // We've removed it, so nullify our internal reference too
         }
