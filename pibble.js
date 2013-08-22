@@ -294,8 +294,17 @@
       }
 
       else if (anchor.nodeType === 3) {
-        el = anchor.parentNode;
+        // This extra check is for Firefox who sneakily goes back to inserting text 
+        // without a <p> element on ctrl + a, backspace and then backspace again
+        if (anchor.parentNode === this.element[0]) {
+          el = anchor;
+        }
+
+        else {
+          el = anchor.parentNode;
+        }
       }
+      console.log(el)
 
       var p = document.createElement('p');
       // this.element[0].appendChild(p);
@@ -350,21 +359,21 @@
 
         // Hack for Firefox re-inserting a <br />
         // 8 = Backspace  
-        if ((this.placeholderEl) 
-            && (this.element[0].children[0] === this.placeholderEl)
-            && (e.keyCode === 8)) {
+        // if ((this.placeholderEl) 
+        //     && (this.element[0].children[0] === this.placeholderEl)
+        //     && (e.keyCode === 8)) {
         
-          e.preventDefault();
+        //   e.preventDefault();
 
-          setTimeout(function() {
-            if (self.element[0].children[0].nextSibling.nodeName.toLowerCase() === 'br') {
-              console.log("Yes im a BR")
-              var para = document.createElement('p');
-              self.element[0].replaceChild(para, self.element[0].children[0].nextSibling);
-              self.refocus();
-              }
-          }, 1);
-        }
+        //   setTimeout(function() {
+        //     if (self.element[0].children[0].nextSibling.nodeName.toLowerCase() === 'br') {
+        //       console.log("Yes im a BR")
+        //       var para = document.createElement('p');
+        //       self.element[0].replaceChild(para, self.element[0].children[0].nextSibling);
+        //       self.refocus();
+        //       }
+        //   }, 1);
+        // }
         // Check if current content matches the content of the placeholder at the time of insertion,
         // if not, and there is actually an active placeholder, remove it. 
         // this.element[0].innerHTML.trim() != this.snapshot
