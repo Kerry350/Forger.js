@@ -265,7 +265,6 @@
     },
 
     handleKeydown: function(e) {
-      console.log("keydown")
       var self = this;
 
       if (e.keyCode === 13) {
@@ -283,9 +282,11 @@
     },
 
     // Browsers are far too inconsistent in their handling of the return key. 
-    // So we handle it instead.
+    // So we handle it instead. This method is quite long, but there are a lot
+    // of use cases to handle.
     handleEnterKey: function() {
       var sel = window.getSelection();
+      var range = sel.getRangeAt(0);
       var anchor = sel.anchorNode;
       var el;
 
@@ -306,56 +307,78 @@
           el = anchor.parentNode;
         }
       }
-      console.log(el)
 
       // We have the el, we now need to deal with one of four scenarios:
-      var range = sel.getRangeAt(0);
+      
       // Presssing enter right at the end of the node in a collapsed state, in which case just skip to the newline - endCollapsedState
 
       if (range.collapsed && (range.startContainer.textContent.length === range.startOffset)) {
         console.log("end collapsed")
-        this.handleEndCollapsedState(sel, el);
+        this.handleEndCollapsedState(sel, range, el);
       }
 
       // Pressing enter in a collapsed state, but part way in the node, move the rest of the node to the newline - middleCollapsedState
 
       else if (range.collapsed && (range.startContainer.textContent.length !== range.startOffset)) {
         console.log("middle collapsed")
-        this.handleMiddleCollapsedState(sel, el);
+        this.handleMiddleCollapsedState(sel, range, el);
       }
 
       // Pressing enter with highlighted text within the same node, at the end of the node, delete text and go new line - endNonCollapsedState
 
       else if (!range.collapsed && (range.startContainer === range.endContainer) && (range.endContainer.textContent.length === range.endOffset)) {
         console.log("end non collapsed")
-        this.handleEndNonCollapsedState(sel, el);
+        this.handleEndNonCollapsedState(sel, range, el);
       }
 
       // Pressing enter with hihglighted text within the same node, but in the middle of the node, delete text and send the rest of the text to a new line - middleNonCollapsedState
 
       else if (!range.collapsed && (range.startContainer === range.endContainer) && (range.endContainer.textContent.length !== range.endOffset)) {
         console.log("middle non collapsed")
-        this.handleMiddleNonCollapsedState(sel, el);
+        this.handleMiddleNonCollapsedState(sel, range, el);
       }
 
       // Pressing enter with highlighted text that spans multiple nodes, delete the text and don't insert a new line - spannedNonCollapsedState
 
       else if (!range.collapsed && (range.startContainer !== range.endContainer)) {
         console.log("spanned non collapsed")
-        this.handleSpannedNonCollapsedState(sel, el);
+        this.handleSpannedNonCollapsedState(sel, range, el);
       }
 
-      var p = document.createElement('p');
       
+    },
+
+    handleEndCollapsedState: function(sel, range, el) {
+      var p = document.createElement('p');
       DOM.insertAfter(p, el);
       this.lastElInserted = p;
       this.refocus(p);
+    },
 
-      console.log("New P inserted and focussed")
+    handleMiddleCollapsedState: function(sel, range, el) {
+      var toRemain = range.startContainer.textContent.substring(0, range.startOffset);
+      var toExtract = range.startContainer.textContent.substring(range.startOffset);
+      el.textContent = toRemain;
+      var p = document.createElement('p');
+      p.textContent = toExtract;
+      DOM.insertAfter(p, el);
+      this.lastElInserted = p;
+      this.refocus(p);
+    },
+
+    handleEndNonCollapsedState: function(sel, range, el) {
+
+    },
+
+    handleMiddleNonCollapsedState: function(sel, range, el) {
+
+    },
+
+    handleSpannedNonCollapsedState: function(sel, range, el) {
+
     },
 
     elementIsEmpty: function() {
-      console.log(this.element[0].innerHTML.trim())
       return (this.element[0].innerHTML.trim() === '') ? true : false;
     },
 
@@ -386,8 +409,6 @@
           self.snapshot = self.element[0].innerHTML.trim();
         }, 1);
 
-        console.log(this.snapshot)
-
         this.refocus(p);
       }
 
@@ -415,8 +436,6 @@
         // Check if current content matches the content of the placeholder at the time of insertion,
         // if not, and there is actually an active placeholder, remove it. 
         // this.element[0].innerHTML.trim() != this.snapshot
-        console.log(this.element[0].children[0]);
-        console.log(this.placeholderEl);
         if ((this.placeholderEl) 
             && (this.element[0].children[0] === this.placeholderEl)
             && (this.element[0].children[0].nextSibling.textContent !== '')) {
