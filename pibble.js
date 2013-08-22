@@ -272,6 +272,8 @@
         
         this.element[0].appendChild(p);
 
+        // We take this 'snapshot' because whilst we only remove the first
+        // <p> later, we also want to match against the second <p> element
         this.snapshot = this.element[0].innerHTML.trim();
 
         this.refocus(p);
@@ -293,6 +295,7 @@
       }
     },
 
+    // Focuses the element in Chrome and Safari
     refocus: function(el) {
       var sel = window.getSelection();
       var range = document.createRange();
@@ -300,6 +303,10 @@
       range.collapse(true);
       sel.removeAllRanges();
       sel.addRange(range);
+
+      // IE, Opera and Firefox will obey this
+      this.element.focus();
+      
       console.log(range);
     },
 
