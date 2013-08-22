@@ -1,9 +1,26 @@
+#container {
+  width: 1000px;
+  margin: 0 auto;
+  font-family: 'Georgia';
+  font-size: 20px;
+  color: #111;
+}
+
 .pibble p {
   padding: 1px;
 }
 
 .pibble {
   min-height: 50px;
+  position: relative;
+}
+
+.pibble-placeholder {
+  position: absolute;
+  color: #D1D0CE;
+  top: 0;
+  left: 0;
+  margin: 0;
 }
 
 .pibble-toolbar li {

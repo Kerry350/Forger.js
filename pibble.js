@@ -259,12 +259,16 @@
 
     emptyCheck: function(e) {
       console.log("doing empty check")
+      var self = this;
+      this.removeDeadElements();
+      
       // Element is empty, so insert a placeholder <p> element
       if (this.elementIsEmpty()) {
         console.log("is empty")
         var p = document.createElement('p');
         p.contentEditable = false;
-        p.appendChild(document.createTextNode("text"));
+        $(p).addClass('pibble-placeholder');
+        p.appendChild(document.createTextNode("Placeholder text"));
         this.element[0].appendChild(p);
         this.placeholderEl = p;
 
@@ -274,7 +278,13 @@
 
         // We take this 'snapshot' because whilst we only remove the first
         // <p> later, we also want to match against the second <p> element
-        this.snapshot = this.element[0].innerHTML.trim();
+        // The timeout is needed due to the innerHTML reported being slightly off due 
+        // to browsers later updating inner elements on insert
+        setTimeout(function() {
+          self.snapshot = self.element[0].innerHTML.trim();
+        }, 1);
+
+        console.log(this.snapshot)
 
         this.refocus(p);
       }
@@ -295,7 +305,19 @@
       }
     },
 
-    // Focuses the element in Chrome and Safari
+    removeDeadElements: function() {
+      console.log("removing dead elements")
+
+      var children = this.element[0].children;
+
+      if (children.length === 1) {
+        if (children[0].textContent === '') {
+          this.element[0].removeChild(children[0]);          
+        }
+      }
+    },
+
+    // Focuses the element in Chrome and Safari (.focus() alone won't insert cursor)
     refocus: function(el) {
       var sel = window.getSelection();
       var range = document.createRange();
@@ -306,8 +328,6 @@
 
       // IE, Opera and Firefox will obey this
       this.element.focus();
-      
-      console.log(range);
     },
 
     getContent: function(contentType) {
@@ -368,7 +388,7 @@
   $.fn.Pibble.defaults = {
     returnFormat: 'Markdown',
     mode: 'regular',
-    placeholder: "<p contentEditable='false'>Text</p><p> </p>",
+    placeholder: "<p class='pibble-placeholder' contentEditable='false'>Placeholder text</p><p> </p>",
     formattingOptions: {
       bold: {
         name: 'bold',
