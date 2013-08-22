@@ -8,6 +8,7 @@
 
 .pibble p {
   padding: 1px;
+  z-index: 100;
 }
 
 .pibble {
@@ -15,12 +16,13 @@
   position: relative;
 }
 
-.pibble-placeholder {
+.pibble .pibble-placeholder {
   position: absolute;
   color: #D1D0CE;
   top: 0;
   left: 0;
   margin: 0;
+  z-index: 10;
 }
 
 .pibble-toolbar li {

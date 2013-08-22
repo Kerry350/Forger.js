@@ -136,6 +136,10 @@
       $(document).on('keyup.' + this.baseClass, this.element, function(e) {
         self.handleKeyup(e);
       });
+
+      $(document).on('keydown.' + this.baseClass, this.element, function(e) {
+        self.handleKeydown(e);
+      });
       
       $(document).on('mouseup.' + this.baseClass, '.' + this.baseClass, function(e) {
         self.handleMouseUp(e);
@@ -241,15 +245,33 @@
       this.element.find('div').contents().unwrap().wrap('<p/>');  
     },
 
-    handleKeyup: function(e) {
-      console.log("keyup")
+    handleKeydown: function(e) {
+      console.log("keydown")
       var self = this;
-      
-      this.emptyCheck();
-      
+
+      if (e.keyCode === 13) {
+        e.preventDefault();
+        this.handleEnterKey();
+      }
+
       if ((e.keyCode === 13) && (this.options.mode === 'inline')) {
         e.preventDefault();
       }
+    },
+
+    handleKeyup: function(e) {
+      e.preventDefault();
+      this.emptyCheck(e);
+    },
+
+    // Browsers are far too inconsistent in their handling of the return key. 
+    // So we handle it instead.
+    handleEnterKey: function() {
+      var p = document.createElement('p');
+      this.element[0].appendChild(p);
+      this.lastElInserted = p;
+      this.refocus(p);
+      console.log("New P inserted and focussed")
     },
 
     elementIsEmpty: function() {
@@ -293,9 +315,31 @@
       else {
         console.log("is not empty")
 
+        // Hack for Firefox re-inserting a <br />
+        // 8 = Backspace  
+        if ((this.placeholderEl) 
+            && (this.element[0].children[0] === this.placeholderEl)
+            && (e.keyCode === 8)) {
+        
+          e.preventDefault();
+
+          setTimeout(function() {
+            if (self.element[0].children[0].nextSibling.nodeName.toLowerCase() === 'br') {
+              console.log("Yes im a BR")
+              var para = document.createElement('p');
+              self.element[0].replaceChild(para, self.element[0].children[0].nextSibling);
+              self.refocus();
+              }
+          }, 1);
+        }
         // Check if current content matches the content of the placeholder at the time of insertion,
         // if not, and there is actually an active placeholder, remove it. 
-        if ((this.placeholderEl) && (this.element[0].innerHTML.trim() != this.snapshot)) {
+        // this.element[0].innerHTML.trim() != this.snapshot
+        console.log(this.element[0].children[0]);
+        console.log(this.placeholderEl);
+        if ((this.placeholderEl) 
+            && (this.element[0].children[0] === this.placeholderEl)
+            && (this.element[0].children[0].nextSibling.textContent !== '')) {
           console.log("not matching, no need el")
 
           this.placeholderEl.parentNode.removeChild(this.placeholderEl);
@@ -311,7 +355,7 @@
       var children = this.element[0].children;
 
       if (children.length === 1) {
-        if (children[0].textContent === '') {
+        if ((children[0].textContent === '') && (children[0] !== this.lastElInserted)) {
           this.element[0].removeChild(children[0]);          
         }
       }
