@@ -1,4 +1,4 @@
-/* Pibble. A content editing plugin. Transform elements in to content editable sections. */
+ // Pibble. A content editing plugin. Transform elements in to content editable sections. 
 
 (function(window, $) {
   /* Third party libraries:
@@ -33,6 +33,25 @@
     outerDiv.append(ul);
 
     return outerDiv;
+  }
+
+  // Utility DOM functions
+  DOM = {};
+
+  DOM.insertAfter = function(el, target) {
+    var parent = target.parentNode;
+
+    if (parent.lastchild === target) {
+      parent.appendChild(el);
+    } 
+
+    else {
+      parent.insertBefore(el, target.nextSibling);
+    }
+  }
+
+  DOM.createNode = function(tag) {
+
   }
 
   var Pibble = function(el, options) {
@@ -260,15 +279,29 @@
     },
 
     handleKeyup: function(e) {
-      e.preventDefault();
       this.emptyCheck(e);
     },
 
     // Browsers are far too inconsistent in their handling of the return key. 
     // So we handle it instead.
     handleEnterKey: function() {
+      var sel = window.getSelection();
+      var anchor = sel.anchorNode;
+      var el;
+
+      if (anchor.nodeType === 1) {
+        el = anchor;
+      }
+
+      else if (anchor.nodeType === 3) {
+        el = anchor.parentNode;
+      }
+
       var p = document.createElement('p');
-      this.element[0].appendChild(p);
+      // this.element[0].appendChild(p);
+      
+      DOM.insertAfter(p, el);
+
       this.lastElInserted = p;
       this.refocus(p);
       console.log("New P inserted and focussed")
@@ -354,7 +387,9 @@
 
       var children = this.element[0].children;
 
+      // Solitary element (will ignore text nodes)
       if (children.length === 1) {
+        // Is empty, and is not an empty <p> that we've manually inserted on return
         if ((children[0].textContent === '') && (children[0] !== this.lastElInserted)) {
           this.element[0].removeChild(children[0]);          
         }
