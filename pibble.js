@@ -367,11 +367,23 @@
     },
 
     handleEndNonCollapsedState: function(sel, range, el) {
-
+      var toRemain = range.startContainer.textContent.substring(0, range.startOffset);
+      el.textContent = toRemain;
+      var p = document.createElement('p');
+      DOM.insertAfter(p, el);
+      this.lastElInserted = p;
+      this.refocus(p);
     },
 
     handleMiddleNonCollapsedState: function(sel, range, el) {
-
+      var toRemain = range.startContainer.textContent.substring(0, range.startOffset);
+      var toExtract = range.startContainer.textContent.substring(range.endOffset, range.startContainer.textContent.length);
+      el.textContent = toRemain;
+      var p = document.createElement('p');
+      p.textContent = toExtract;
+      DOM.insertAfter(p, el);
+      this.lastElInserted = p;
+      this.refocus(p);
     },
 
     handleSpannedNonCollapsedState: function(sel, range, el) {
@@ -405,9 +417,9 @@
         // <p> later, we also want to match against the second <p> element
         // The timeout is needed due to the innerHTML reported being slightly off due 
         // to browsers later updating inner elements on insert
-        setTimeout(function() {
-          self.snapshot = self.element[0].innerHTML.trim();
-        }, 1);
+        // setTimeout(function() {
+        //   self.snapshot = self.element[0].innerHTML.trim();
+        // }, 1);
 
         this.refocus(p);
       }
@@ -533,7 +545,7 @@
   $.fn.Pibble.defaults = {
     returnFormat: 'Markdown',
     mode: 'regular',
-    placeholder: "<p class='pibble-placeholder' contentEditable='false'>Placeholder text</p><p> </p>",
+    placeholderText: 'Insert content',
     formattingOptions: {
       bold: {
         name: 'bold',
