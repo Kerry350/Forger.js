@@ -203,10 +203,9 @@
       }
 
       else {
-        console.log("I don't support clipboard data");
         // IE
         if (window.clipboardData) {
-          var text = window.clipboardData.getData('Text');
+          var plainText = window.clipboardData.getData('Text');
           var url = window.clipboardData.getData('URL');
         }
       }
@@ -336,40 +335,37 @@
         }
       }
 
+      console.log(el)
+
       // We have the el, we now need to deal with one of four scenarios:
       
       // Presssing enter right at the end of the node in a collapsed state, in which case just skip to the newline - endCollapsedState
 
       if (range.collapsed && (range.startContainer.textContent.length === range.startOffset)) {
-        console.log("end collapsed")
         this.handleEndCollapsedState(sel, range, el);
       }
 
       // Pressing enter in a collapsed state, but part way in the node, move the rest of the node to the newline - middleCollapsedState
 
       else if (range.collapsed && (range.startContainer.textContent.length !== range.startOffset)) {
-        console.log("middle collapsed")
         this.handleMiddleCollapsedState(sel, range, el);
       }
 
       // Pressing enter with highlighted text within the same node, at the end of the node, delete text and go new line - endNonCollapsedState
 
       else if (!range.collapsed && (range.startContainer === range.endContainer) && (range.endContainer.textContent.length === range.endOffset)) {
-        console.log("end non collapsed")
         this.handleEndNonCollapsedState(sel, range, el);
       }
 
       // Pressing enter with hihglighted text within the same node, but in the middle of the node, delete text and send the rest of the text to a new line - middleNonCollapsedState
 
       else if (!range.collapsed && (range.startContainer === range.endContainer) && (range.endContainer.textContent.length !== range.endOffset)) {
-        console.log("middle non collapsed")
         this.handleMiddleNonCollapsedState(sel, range, el);
       }
 
       // Pressing enter with highlighted text that spans multiple nodes, delete the text and don't insert a new line - spannedNonCollapsedState
 
       else if (!range.collapsed && (range.startContainer !== range.endContainer)) {
-        console.log("spanned non collapsed")
         this.handleSpannedNonCollapsedState(sel, range, el);
       }
 
@@ -377,7 +373,7 @@
     },
 
     handleEndCollapsedState: function(sel, range, el) {
-      var p = document.createElement('p');
+      var p = document.createElement(el.nodeName.toLowerCase());
       DOM.insertAfter(p, el);
       this.lastElInserted = p;
       this.refocus(p);
@@ -387,7 +383,7 @@
       var toRemain = range.startContainer.textContent.substring(0, range.startOffset);
       var toExtract = range.startContainer.textContent.substring(range.startOffset);
       el.textContent = toRemain;
-      var p = document.createElement('p');
+      var p = document.createElement(el.nodeName.toLowerCase());
       p.textContent = toExtract;
       DOM.insertAfter(p, el);
       this.lastElInserted = p;
@@ -397,7 +393,7 @@
     handleEndNonCollapsedState: function(sel, range, el) {
       var toRemain = range.startContainer.textContent.substring(0, range.startOffset);
       el.textContent = toRemain;
-      var p = document.createElement('p');
+      var p = document.createElement(el.nodeName.toLowerCase());
       DOM.insertAfter(p, el);
       this.lastElInserted = p;
       this.refocus(p);
@@ -407,7 +403,7 @@
       var toRemain = range.startContainer.textContent.substring(0, range.startOffset);
       var toExtract = range.startContainer.textContent.substring(range.endOffset, range.startContainer.textContent.length);
       el.textContent = toRemain;
-      var p = document.createElement('p');
+      var p = document.createElement(el.nodeName.toLowerCase());
       p.textContent = toExtract;
       DOM.insertAfter(p, el);
       this.lastElInserted = p;
@@ -470,7 +466,6 @@
         if ((this.placeholderEl) 
             && (this.element[0].children[0] === this.placeholderEl)
             && (this.element[0].children[0].nextSibling.textContent !== '')) {
-          console.log("not matching, no need el")
 
           this.placeholderEl.parentNode.removeChild(this.placeholderEl);
           this.placeholderEl = null; // We've removed it, so nullify our internal reference too
@@ -480,8 +475,6 @@
     },
 
     removeDeadElements: function() {
-      console.log("removing dead elements")
-
       var children = this.element[0].children;
 
       // Solitary element (will ignore text nodes)
