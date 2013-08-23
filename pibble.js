@@ -152,6 +152,8 @@
     addEventListeners: function() {
       var self = this;
       
+      this.element[0].addEventListener('paste', this.handlePaste);
+
       $(document).on('keyup.' + this.baseClass, this.element, function(e) {
         self.handleKeyup(e);
       });
@@ -182,6 +184,32 @@
         // Blur skipped, set selection in progress back to false
         self.menuSelectionInProgress = false;
       });          
+    },
+
+    handlePaste: function(e) {
+      if (e.clipboardData) {
+        if (e.clipboardData.types) {
+          var plainText = e.clipboardData.getData('text/plain');
+          var html = e.clipboardData.getData('text/html');
+        } 
+
+        else {
+          // Types array seems to be implemented everywhere (apart from IEs case below),
+          // but I'll leave this here for now.
+          // var text = e.clipboardData.getData('text/plain');
+          // var url = e.clipboardData.getData('text/uri-list');
+          // var html = e.clipboardData.getData('text/html');
+        }
+      }
+
+      else {
+        console.log("I don't support clipboard data");
+        // IE
+        if (window.clipboardData) {
+          var text = window.clipboardData.getData('Text');
+          var url = window.clipboardData.getData('URL');
+        }
+      }
     },
 
     getSelection: function(cb) {
