@@ -414,13 +414,12 @@
     },
 
     emptyCheck: function(e) {
-      console.log("doing empty check")
       var self = this;
+
       this.removeDeadElements();
       
       // Element is empty, so insert a placeholder <p> element
       if (this.elementIsEmpty()) {
-        console.log("is empty")
         var p = document.createElement('p');
         p.contentEditable = false;
         $(p).addClass('pibble-placeholder');
@@ -432,38 +431,11 @@
         
         this.element[0].appendChild(p);
 
-        // We take this 'snapshot' because whilst we only remove the first
-        // <p> later, we also want to match against the second <p> element
-        // The timeout is needed due to the innerHTML reported being slightly off due 
-        // to browsers later updating inner elements on insert
-        // setTimeout(function() {
-        //   self.snapshot = self.element[0].innerHTML.trim();
-        // }, 1);
-
         this.refocus(p);
       }
 
       // Not empty
       else {
-        console.log("is not empty")
-
-        // Hack for Firefox re-inserting a <br />
-        // 8 = Backspace  
-        // if ((this.placeholderEl) 
-        //     && (this.element[0].children[0] === this.placeholderEl)
-        //     && (e.keyCode === 8)) {
-        
-        //   e.preventDefault();
-
-        //   setTimeout(function() {
-        //     if (self.element[0].children[0].nextSibling.nodeName.toLowerCase() === 'br') {
-        //       console.log("Yes im a BR")
-        //       var para = document.createElement('p');
-        //       self.element[0].replaceChild(para, self.element[0].children[0].nextSibling);
-        //       self.refocus();
-        //       }
-        //   }, 1);
-        // }
         // Check if current content matches the content of the placeholder at the time of insertion,
         // if not, and there is actually an active placeholder, remove it. 
         // this.element[0].innerHTML.trim() != this.snapshot
