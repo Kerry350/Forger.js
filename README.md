@@ -1,9 +1,11 @@
 Pibble.js
 ======
 
-**This is a work in progress. The plugin isn't completely finished yet. Use at your own risk**
+**This is a work in progress. The plugin isn't completely finished yet. Use at your own risk.**
 
 Pibble.js transforms near enough any element in to a content editable region. It makes use of HTML5's `contenteditable` attribute. 
+
+At the moment this is built as a jQuery plugin, but I'll be porting it over to 'vanilla' JS soon - therefore there will be no dependencies. (It's okay, there will still be a jQuery plugin wrapper for optional use).
 
 # Examples
 

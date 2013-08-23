@@ -387,7 +387,26 @@
     },
 
     handleSpannedNonCollapsedState: function(sel, range, el) {
+      var toRemainInAnchorNode = range.startContainer.textContent.substring(0, range.startOffset);
+      var toRemainInFocusNode = range.endContainer.textContent.substring(range.endOffset, range.endContainer.textContent.length);
+      range.startContainer.textContent = toRemainInAnchorNode;
+      range.endContainer.textContent = toRemainInFocusNode;
 
+      sibling = range.startContainer.parentNode.nextSibling;
+
+      while (sibling) {
+        if (sibling !== range.endContainer.parentNode) {
+          var next = sibling.nextSibling;
+          this.element[0].removeChild(sibling);
+          sibling = next;
+        }
+
+        else {
+          sibling = null;
+        }
+      }
+      
+      this.refocus(range.endContainer);
     },
 
     elementIsEmpty: function() {
