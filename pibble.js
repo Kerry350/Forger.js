@@ -154,31 +154,23 @@
       
       this.element[0].addEventListener('paste', this.handlePaste);
       
-      $(document).on('click.' + this.baseClass, this.element, function(e) {
-        console.log("clicky")
-        self.handleClick(e);
-        console.log(window.getSelection().getRangeAt(0).startContainer)
-        
-        // If it's a text node and it's parent is the element, it's IE being a douche. Re-focus on intro para in this case. 
-        // var para = self.element[0].querySelectorAll('.intro-para')[0];
-        
-      });
-
       $(document).on('keyup.' + this.baseClass, this.element, function(e) {
         self.handleKeyup(e);
+        var start = window.getSelection().getRangeAt(0).startContainer;
+        // If it's a text node and it's parent is the element, it's IE being a douche.
+        // This is when you manually click back within the element from somewhere else.
+        // IE will 'focus' and report the right elements on keydown, yet by keyup a new empty
+        // text node will have been filled and inserted with the text
+        if (start.nodeType === 3 && start.parentNode === self.element[0]) {
+          var p = document.createElement('p');
+          p.textContent = start.textContent;
+          start.parentNode.replaceChild(p, start);
+          self.refocus(p, p.textContent.length - 1);
+        }
       });
 
       $(document).on('keydown.' + this.baseClass, this.element, function(e) {
-        self.handleKeydown(e);
-        var start = window.getSelection().getRangeAt(0).startContainer;
-        var start = window.getSelection().getRangeAt(0).startContainer;
-        console.log(start.nodeType === 3)
-        console.log(start.parentNode)
-        if (start.nodeType === 3 && start.parentNode === self.element[0]) {
-          console.log("YUP IE = DOUCHE")
-        }
-         console.log(start.nodeType === 3)
-        console.log(start.parentNode)
+        self.handleKeydown(e);      
       });
       
       $(document).on('mouseup.' + this.baseClass, '.' + this.baseClass, function(e) {
@@ -340,8 +332,7 @@
       var anchor = sel.anchorNode;
       var el;
 
-      console.log(anchor)
-      console.log(range.startContainer)
+  
       // el will be a <p>, <li> and so on. 
       if (anchor.nodeType === 1) {
         el = anchor;
@@ -479,7 +470,6 @@
     },
 
     elementIsEmpty: function() {
-      console.log(this.element[0].innerHTML.trim())
       // Will cover most
       if (this.element[0].innerHTML.trim() === '') {
         return true;
