@@ -153,6 +153,16 @@
       var self = this;
       
       this.element[0].addEventListener('paste', this.handlePaste);
+      
+      $(document).on('click.' + this.baseClass, this.element, function(e) {
+        console.log("clicky")
+        self.handleClick(e);
+        console.log(window.getSelection().getRangeAt(0).startContainer)
+        
+        // If it's a text node and it's parent is the element, it's IE being a douche. Re-focus on intro para in this case. 
+        // var para = self.element[0].querySelectorAll('.intro-para')[0];
+        
+      });
 
       $(document).on('keyup.' + this.baseClass, this.element, function(e) {
         self.handleKeyup(e);
@@ -160,6 +170,15 @@
 
       $(document).on('keydown.' + this.baseClass, this.element, function(e) {
         self.handleKeydown(e);
+        var start = window.getSelection().getRangeAt(0).startContainer;
+        var start = window.getSelection().getRangeAt(0).startContainer;
+        console.log(start.nodeType === 3)
+        console.log(start.parentNode)
+        if (start.nodeType === 3 && start.parentNode === self.element[0]) {
+          console.log("YUP IE = DOUCHE")
+        }
+         console.log(start.nodeType === 3)
+        console.log(start.parentNode)
       });
       
       $(document).on('mouseup.' + this.baseClass, '.' + this.baseClass, function(e) {
@@ -184,6 +203,10 @@
         // Blur skipped, set selection in progress back to false
         self.menuSelectionInProgress = false;
       });          
+    },
+
+    handleClick: function(e) {
+
     },
 
     handlePaste: function(e) {
@@ -317,20 +340,33 @@
       var anchor = sel.anchorNode;
       var el;
 
-      // el will be a <p>, or text node if Firefox is playing dodgy buggers
+      console.log(anchor)
+      console.log(range.startContainer)
+      // el will be a <p>, <li> and so on. 
       if (anchor.nodeType === 1) {
         el = anchor;
+        console.log('1')
       }
 
       else if (anchor.nodeType === 3) {
         // This extra check is for Firefox who sneakily goes back to inserting text 
         // without a <p> element on <ctrl + a>, <backspace> and then <backspace> again
-        // Pop a fix in there to replace with a <p>
+        // Pop a fix in there to replace with a <p>. IE will also do this when you
+        // manually focus the element with a click, and start typing. 
         if (anchor.parentNode === this.element[0]) {
-          el = anchor;
+          el = anchor; // Text node
+          var p = document.createElement('p');
+          p.textContent = el.textContent;
+          el.parentNode.replaceChild(p, el);
+          el = p; // Set to the replaced element
+          this.refocus(el, el.textContent.length - 1);
+          console.log("MAKING EL")
+          console.log(el.textContent.length - 1)
         }
 
         else {
+                  console.log('3')
+          // The text nodes containing <p>, <li> etc
           el = anchor.parentNode;
         }
       }
@@ -342,30 +378,39 @@
       // Presssing enter right at the end of the node in a collapsed state, in which case just skip to the newline - endCollapsedState
 
       if (range.collapsed && (range.startContainer.textContent.length === range.startOffset)) {
+        console.log("S1")
         this.handleEndCollapsedState(sel, range, el);
       }
 
       // Pressing enter in a collapsed state, but part way in the node, move the rest of the node to the newline - middleCollapsedState
 
       else if (range.collapsed && (range.startContainer.textContent.length !== range.startOffset)) {
+                console.log("S2")
+
         this.handleMiddleCollapsedState(sel, range, el);
       }
 
       // Pressing enter with highlighted text within the same node, at the end of the node, delete text and go new line - endNonCollapsedState
 
       else if (!range.collapsed && (range.startContainer === range.endContainer) && (range.endContainer.textContent.length === range.endOffset)) {
+                console.log("S3")
+
         this.handleEndNonCollapsedState(sel, range, el);
       }
 
       // Pressing enter with hihglighted text within the same node, but in the middle of the node, delete text and send the rest of the text to a new line - middleNonCollapsedState
 
       else if (!range.collapsed && (range.startContainer === range.endContainer) && (range.endContainer.textContent.length !== range.endOffset)) {
+                console.log("S4")
+
         this.handleMiddleNonCollapsedState(sel, range, el);
       }
 
       // Pressing enter with highlighted text that spans multiple nodes, delete the text and don't insert a new line - spannedNonCollapsedState
 
       else if (!range.collapsed && (range.startContainer !== range.endContainer)) {
+                console.log("S5")
+
         this.handleSpannedNonCollapsedState(sel, range, el);
       }
 
@@ -434,7 +479,23 @@
     },
 
     elementIsEmpty: function() {
-      return (this.element[0].innerHTML.trim() === '') ? true : false;
+      console.log(this.element[0].innerHTML.trim())
+      // Will cover most
+      if (this.element[0].innerHTML.trim() === '') {
+        return true;
+      }
+
+      // When clicking the element manually with the placeholder active, 
+      // then pressing backspace, IE inserts &nbsp;, this will cover those.
+      // No point doing this for everyone due to the regex penalty.
+      if (this.element[0].innerHTML.trim().replace(/&nbsp;/gi,'') === '') {
+        this.element[0].innerHTML = this.element[0].innerHTML.replace(/&nbsp;/gi,'');
+        return true;
+      }
+
+      else {
+        return false;
+      }
     },
 
     emptyCheck: function(e) {
@@ -444,6 +505,7 @@
       
       // Element is empty, so insert a placeholder <p> element
       if (this.elementIsEmpty()) {
+        console.log("empty")
         var p = document.createElement('p');
         p.contentEditable = false;
         $(p).addClass('pibble-placeholder');
@@ -452,6 +514,7 @@
         this.placeholderEl = p;
 
         var p = document.createElement('p');
+        p.className = 'intro-para';
         
         this.element[0].appendChild(p);
 
@@ -460,12 +523,17 @@
 
       // Not empty
       else {
+                console.log("not empty")
+
         // Check if current content matches the content of the placeholder at the time of insertion,
         // if not, and there is actually an active placeholder, remove it. 
         // this.element[0].innerHTML.trim() != this.snapshot
         if ((this.placeholderEl) 
             && (this.element[0].children[0] === this.placeholderEl)
             && (this.element[0].children[0].nextSibling.textContent !== '')) {
+                  console.log("can go")
+                console.log(this.element[0].children[0].nextSibling.textContent)
+
 
           this.placeholderEl.parentNode.removeChild(this.placeholderEl);
           this.placeholderEl = null; // We've removed it, so nullify our internal reference too
@@ -487,10 +555,10 @@
     },
 
     // Focuses the element in Chrome and Safari (.focus() alone won't insert cursor)
-    refocus: function(el) {
+    refocus: function(el, index) {
       var sel = window.getSelection();
       var range = document.createRange();
-      range.setStart(el, 0);
+      range.setStart(el, (index || 0));
       range.collapse(true);
       sel.removeAllRanges();
       sel.addRange(range);
