@@ -165,7 +165,7 @@
           var p = document.createElement('p');
           p.textContent = start.textContent;
           start.parentNode.replaceChild(p, start);
-          self.refocus(p, p.textContent.length - 1);
+          self.refocus(p, p.textContent.length);
         }
       });
 
@@ -308,6 +308,24 @@
 
     handleKeydown: function(e) {
       var self = this;
+    console.log(window.getSelection().getRangeAt(0).startContainer)
+      var range = window.getSelection().getRangeAt(0);
+      if (e.keyCode === 8) {
+        // placeholder active, and in first element after, and is backspace
+        var start = window.getSelection().getRangeAt(0).startContainer;
+        
+        console.log(this.placeholderEl.nextSibling)
+                console.log(this.placeholderEl)
+                console.log(start === this.placeholderEl.nextSibling)
+                console.log(start.startOffset)
+
+        if (this.placeholderEl &&
+            start === this.placeholderEl.nextSibling &&
+            range.startOffset === 0) {
+          console.log("I MATCH ALL OF EM")
+          e.preventDefault();
+        }
+      }
 
       if (e.keyCode === 13) {
         e.preventDefault();
@@ -320,6 +338,8 @@
     },
 
     handleKeyup: function(e) {
+          console.log(window.getSelection().getRangeAt(0).startContainer)
+
       this.emptyCheck(e);
     },
 
