@@ -156,11 +156,12 @@
       
       $(document).on('keyup.' + this.baseClass, this.element, function(e) {
         self.handleKeyup(e);
-        var start = window.getSelection().getRangeAt(0).startContainer;
         // If it's a text node and it's parent is the element, it's IE being a douche.
         // This is when you manually click back within the element from somewhere else.
         // IE will 'focus' and report the right elements on keydown, yet by keyup a new empty
         // text node will have been filled and inserted with the text
+        var start = window.getSelection().getRangeAt(0).startContainer;
+        
         if (start.nodeType === 3 && start.parentNode === self.element[0]) {
           var p = document.createElement('p');
           p.textContent = start.textContent;
