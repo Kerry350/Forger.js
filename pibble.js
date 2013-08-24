@@ -155,23 +155,23 @@
       this.element[0].addEventListener('paste', this.handlePaste);
       
       $(document).on('keyup.' + this.baseClass, this.element, function(e) {
-        self.handleKeyup(e);
+        // self.handleKeyup(e);
         // If it's a text node and it's parent is the element, it's IE being a douche.
         // This is when you manually click back within the element from somewhere else.
         // IE will 'focus' and report the right elements on keydown, yet by keyup a new empty
         // text node will have been filled and inserted with the text
-        var start = window.getSelection().getRangeAt(0).startContainer;
-        
-        if (start.nodeType === 3 && start.parentNode === self.element[0]) {
-          var p = document.createElement('p');
-          p.textContent = start.textContent;
-          start.parentNode.replaceChild(p, start);
-          self.refocus(p, p.textContent.length);
-        }
+        // var start = window.getSelection().getRangeAt(0).startContainer;
+
+        // if (start.nodeType === 3 && start.parentNode === self.element[0]) {
+        //   var p = document.createElement('p');
+        //   p.textContent = start.textContent;
+        //   start.parentNode.replaceChild(p, start);
+        //   self.refocus(p, p.textContent.length);
+        // }
       });
 
       $(document).on('keydown.' + this.baseClass, this.element, function(e) {
-        self.handleKeydown(e);      
+        // self.handleKeydown(e);      
       });
       
       $(document).on('mouseup.' + this.baseClass, '.' + this.baseClass, function(e) {
@@ -336,7 +336,7 @@
     },
 
     handleKeyup: function(e) {
-      this.emptyCheck(e);
+      // this.emptyCheck(e);
     },
 
     // Browsers are far too inconsistent in their handling of the return key. 
@@ -561,7 +561,68 @@
     },
 
     getHTML: function() {
+      this.sanitiseContent(this.element[0].innerHTML);
       return this.element.html();
+    },
+
+    sanitiseContent: function(content) {
+      // Straight up remove all &nbsp;
+      content = content.replace(/&nbsp;/gi,'');
+      var donour = document.createElement('div');
+      donour.innerHTML = content;
+
+      // Get rid of <br /> elements altogether
+      this.removeEls(donour, 'br');
+
+      // Wrap top-level text nodes with a <p> element
+      this.wrapTextNodes(donour);
+
+      // Get rid of empty <div> and <p> elements
+      this.removeEmptyElements(donour, 'div');
+      this.removeEmptyElements(donour, 'p');
+
+      console.log(donour)
+    },
+
+    removeEmptyElements: function(el, tag) {
+      var els = el.querySelectorAll(tag);
+
+      for (var i = 0; i < els.length; i++) {
+        if (els[i].nodeName.toLowerCase() === tag && els[i].innerHTML.trim() === '') {
+          els[i].parentNode.removeChild(els[i]);
+        } 
+      }
+    },
+
+    walkTheDOM: function(node, func) {
+      func(node);
+      node = node.firstChild;
+      while (node) {
+        this.walkTheDOM(node, func);
+        node = node.nextSibling;
+      }
+    },
+
+    removeEls: function(content, tag) {      
+      var els = content.querySelectorAll('br');
+
+      for (var i = 0; i < els.length; i++) {
+        els[i].parentNode.removeChild(els[i]);
+      }
+    },
+
+    wrapTextNodes: function(content) {
+      for (var i = 0; i < content.childNodes.length; i++) {
+        // if (content.childNodes[i].hasChildNodes()) {
+        //   this.wrapTextNodes(content.childNodes[i])
+        // } 
+
+        if (content.childNodes[i].nodeType === 3) {
+          var p = document.createElement('p');
+          p.textContent = content.childNodes[i].textContent;
+          content.childNodes[i].parentNode.replaceChild(p, content.childNodes[i]);
+        }
+      }
     },
 
     markdown: function() {
