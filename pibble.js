@@ -308,22 +308,19 @@
 
     handleKeydown: function(e) {
       var self = this;
-    console.log(window.getSelection().getRangeAt(0).startContainer)
-      var range = window.getSelection().getRangeAt(0);
-      if (e.keyCode === 8) {
-        // placeholder active, and in first element after, and is backspace
-        var start = window.getSelection().getRangeAt(0).startContainer;
-        
-        console.log(this.placeholderEl.nextSibling)
-                console.log(this.placeholderEl)
-                console.log(start === this.placeholderEl.nextSibling)
-                console.log(start.startOffset)
 
+      var range = window.getSelection().getRangeAt(0);
+
+      if (e.keyCode === 8) {
+
+        // The placeholder is active, we are in the first element after it, 
+        // and pressing backspace. We want to cancel this to stop flickering
+        // in chrome, Opera etc, and also stop Firefox from reverting to it's
+        // defaults and inserting a <br />
         if (this.placeholderEl &&
-            start === this.placeholderEl.nextSibling &&
+            range.startContainer === this.placeholderEl.nextSibling &&
             range.startOffset === 0) {
-          console.log("I MATCH ALL OF EM")
-          e.preventDefault();
+            e.preventDefault();
         }
       }
 
