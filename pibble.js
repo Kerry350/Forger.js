@@ -335,8 +335,6 @@
     },
 
     handleKeyup: function(e) {
-          console.log(window.getSelection().getRangeAt(0).startContainer)
-
       this.emptyCheck(e);
     },
 
@@ -353,7 +351,6 @@
       // el will be a <p>, <li> and so on. 
       if (anchor.nodeType === 1) {
         el = anchor;
-        console.log('1')
       }
 
       else if (anchor.nodeType === 3) {
@@ -367,58 +364,44 @@
           p.textContent = el.textContent;
           el.parentNode.replaceChild(p, el);
           el = p; // Set to the replaced element
-          this.refocus(el, el.textContent.length - 1);
-          console.log("MAKING EL")
-          console.log(el.textContent.length - 1)
+          this.refocus(el, el.textContent.length);
         }
 
         else {
-                  console.log('3')
           // The text nodes containing <p>, <li> etc
           el = anchor.parentNode;
         }
       }
-
-      console.log(el)
 
       // We have the el, we now need to deal with one of four scenarios:
       
       // Presssing enter right at the end of the node in a collapsed state, in which case just skip to the newline - endCollapsedState
 
       if (range.collapsed && (range.startContainer.textContent.length === range.startOffset)) {
-        console.log("S1")
         this.handleEndCollapsedState(sel, range, el);
       }
 
       // Pressing enter in a collapsed state, but part way in the node, move the rest of the node to the newline - middleCollapsedState
 
       else if (range.collapsed && (range.startContainer.textContent.length !== range.startOffset)) {
-                console.log("S2")
-
         this.handleMiddleCollapsedState(sel, range, el);
       }
 
       // Pressing enter with highlighted text within the same node, at the end of the node, delete text and go new line - endNonCollapsedState
 
       else if (!range.collapsed && (range.startContainer === range.endContainer) && (range.endContainer.textContent.length === range.endOffset)) {
-                console.log("S3")
-
         this.handleEndNonCollapsedState(sel, range, el);
       }
 
       // Pressing enter with hihglighted text within the same node, but in the middle of the node, delete text and send the rest of the text to a new line - middleNonCollapsedState
 
       else if (!range.collapsed && (range.startContainer === range.endContainer) && (range.endContainer.textContent.length !== range.endOffset)) {
-                console.log("S4")
-
         this.handleMiddleNonCollapsedState(sel, range, el);
       }
 
       // Pressing enter with highlighted text that spans multiple nodes, delete the text and don't insert a new line - spannedNonCollapsedState
 
       else if (!range.collapsed && (range.startContainer !== range.endContainer)) {
-                console.log("S5")
-
         this.handleSpannedNonCollapsedState(sel, range, el);
       }
 
@@ -512,7 +495,6 @@
       
       // Element is empty, so insert a placeholder <p> element
       if (this.elementIsEmpty()) {
-        console.log("empty")
         var p = document.createElement('p');
         p.contentEditable = false;
         $(p).addClass('pibble-placeholder');
@@ -530,17 +512,12 @@
 
       // Not empty
       else {
-                console.log("not empty")
-
         // Check if current content matches the content of the placeholder at the time of insertion,
         // if not, and there is actually an active placeholder, remove it. 
         // this.element[0].innerHTML.trim() != this.snapshot
         if ((this.placeholderEl) 
             && (this.element[0].children[0] === this.placeholderEl)
             && (this.element[0].children[0].nextSibling.textContent !== '')) {
-                  console.log("can go")
-                console.log(this.element[0].children[0].nextSibling.textContent)
-
 
           this.placeholderEl.parentNode.removeChild(this.placeholderEl);
           this.placeholderEl = null; // We've removed it, so nullify our internal reference too
