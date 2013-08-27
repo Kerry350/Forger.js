@@ -156,18 +156,6 @@
       
       $(document).on('keyup.' + this.baseClass, this.element, function(e) {
         self.handleKeyup(e);
-        // If it's a text node and it's parent is the element, it's IE being a douche.
-        // This is when you manually click back within the element from somewhere else.
-        // IE will 'focus' and report the right elements on keydown, yet by keyup a new empty
-        // text node will have been filled and inserted with the text
-        var start = window.getSelection().getRangeAt(0).startContainer;
-        
-        if (start.nodeType === 3 && start.parentNode === self.element[0]) {
-          var p = document.createElement('p');
-          p.textContent = start.textContent;
-          start.parentNode.replaceChild(p, start);
-          self.refocus(p, p.textContent.length);
-        }
       });
 
       $(document).on('keydown.' + this.baseClass, this.element, function(e) {
@@ -303,28 +291,10 @@
       this.toolbar.hide();
     },
 
-    cleanContent: function() {
-      this.element.find('div').contents().unwrap().wrap('<p/>');  
-    },
-
     handleKeydown: function(e) {
       var self = this;
 
-      var range = window.getSelection().getRangeAt(0);
-
-      if (e.keyCode === 8) {
-
-        // The placeholder is active, we are in the first element after it, 
-        // and pressing backspace. We want to cancel this to stop flickering
-        // in chrome, Opera etc, and also stop Firefox from reverting to it's
-        // defaults and inserting a <br />
-        if (this.placeholderEl &&
-            range.startContainer === this.placeholderEl.nextSibling &&
-            range.startOffset === 0) {
-            e.preventDefault();
-        }
-      }
-
+      // Enter
       if (e.keyCode === 13) {
         e.preventDefault();
         this.handleEnterKey();
@@ -336,7 +306,10 @@
     },
 
     handleKeyup: function(e) {
-      this.emptyCheck(e);
+      // Backspace or delete
+      if (e.keyCode === 8 || e.keyCode === 46) {
+        this.emptyCheck(e);
+      }
     },
 
     // Browsers are far too inconsistent in their handling of the return key. 
@@ -470,20 +443,22 @@
       this.refocus(range.endContainer);
     },
 
-    elementIsEmpty: function() {
-      // Will cover most
-      if (this.element[0].innerHTML.trim() === '') {
+    elementIsEmpty: function(e) {
+      var html = this.element[0].innerHTML.trim();
+      
+      html = html.replace(/<br>/i, '');
+
+      var alt = html.replace(/<(?:.|\n)*?>/gm, '');
+
+      if (html === '' || alt === '') {
+        
+        if (e) {
+          e.preventDefault();
+        }
+
         return true;
       }
-
-      // When clicking the element manually with the placeholder active, 
-      // then pressing backspace, IE inserts &nbsp;, this will cover those.
-      // No point doing this for everyone due to the regex penalty.
-      if (this.element[0].innerHTML.trim().replace(/&nbsp;/gi,'') === '') {
-        this.element[0].innerHTML = this.element[0].innerHTML.replace(/&nbsp;/gi,'');
-        return true;
-      }
-
+      
       else {
         return false;
       }
@@ -492,50 +467,12 @@
     emptyCheck: function(e) {
       var self = this;
 
-      this.removeDeadElements();
-      
-      // Element is empty, so insert a placeholder <p> element
-      if (this.elementIsEmpty()) {
+      // Element is empty, so insert an empty <p> element
+      if (this.elementIsEmpty(e)) {
         var p = document.createElement('p');
-        p.contentEditable = false;
-        $(p).addClass('pibble-placeholder');
-        p.appendChild(document.createTextNode("Placeholder text"));
-        this.element[0].appendChild(p);
-        this.placeholderEl = p;
-
-        var p = document.createElement('p');
-        p.className = 'intro-para';
-        
-        this.element[0].appendChild(p);
-
+        p.innerHTML = '&#8203;';
+        this.element.html(p);
         this.refocus(p);
-      }
-
-      // Not empty
-      else {
-        // Check if current content matches the content of the placeholder at the time of insertion,
-        // if not, and there is actually an active placeholder, remove it. 
-        // this.element[0].innerHTML.trim() != this.snapshot
-        if ((this.placeholderEl) 
-            && (this.element[0].children[0] === this.placeholderEl)
-            && (this.element[0].children[0].nextSibling.textContent !== '')) {
-
-          this.placeholderEl.parentNode.removeChild(this.placeholderEl);
-          this.placeholderEl = null; // We've removed it, so nullify our internal reference too
-        }
-        
-      }
-    },
-
-    removeDeadElements: function() {
-      var children = this.element[0].children;
-
-      // Solitary element (will ignore text nodes)
-      if (children.length === 1) {
-        // Is empty, and is not an empty <p> that we've manually inserted on return
-        if ((children[0].textContent === '') && (children[0] !== this.lastElInserted)) {
-          this.element[0].removeChild(children[0]);          
-        }
       }
     },
 
