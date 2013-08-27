@@ -581,12 +581,15 @@
       this.removeEmptyElements(donour, 'div');
       this.removeEmptyElements(donour, 'p');
 
+      // Replace <div> with <p> 
+
+      // <p> elements with multiple text nodes post <br /> removal
+
       console.log(donour)
     },
 
     removeEmptyElements: function(el, tag) {
       var els = el.querySelectorAll(tag);
-
       for (var i = 0; i < els.length; i++) {
         if (els[i].nodeName.toLowerCase() === tag && els[i].innerHTML.trim() === '') {
           els[i].parentNode.removeChild(els[i]);
@@ -604,8 +607,7 @@
     },
 
     removeEls: function(content, tag) {      
-      var els = content.querySelectorAll('br');
-
+      var els = content.querySelectorAll(tag);
       for (var i = 0; i < els.length; i++) {
         els[i].parentNode.removeChild(els[i]);
       }
@@ -613,10 +615,6 @@
 
     wrapTextNodes: function(content) {
       for (var i = 0; i < content.childNodes.length; i++) {
-        // if (content.childNodes[i].hasChildNodes()) {
-        //   this.wrapTextNodes(content.childNodes[i])
-        // } 
-
         if (content.childNodes[i].nodeType === 3) {
           var p = document.createElement('p');
           p.textContent = content.childNodes[i].textContent;
