@@ -321,7 +321,14 @@
       var anchor = sel.anchorNode;
       var el;
 
-  
+      console.log(sel)
+      console.log(range)
+    
+
+      setTimeout(function() {
+        console.log(sel)
+      console.log(window.getSelection().getRangeAt(0))
+    }, 100)
       // el will be a <p>, <li> and so on. 
       if (anchor.nodeType === 1) {
         el = anchor;
@@ -333,6 +340,7 @@
         // Pop a fix in there to replace with a <p>. IE will also do this when you
         // manually focus the element with a click, and start typing. 
         if (anchor.parentNode === this.element[0]) {
+          console.log("YEAH")
           el = anchor; // Text node
           var p = document.createElement('p');
           p.textContent = el.textContent;
