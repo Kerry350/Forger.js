@@ -307,30 +307,24 @@
      this.emptyCheck(e);
     },
 
-    elementIsEmpty: function(rerun) {
+    elementIsEmpty: function(e) {
       var self = this;
+      var html = this.element[0].innerHTML.trim();
       
-      this.removeEmptyTopLevelTextNodes();
-      // Will cover most
-      if (this.element[0].innerHTML.trim() === '') {
+      html = html.replace(/<br>/i, '');
+
+      var alt = html.replace(/<(?:.|\n)*?>/gm, '');
+
+      if (html === '' || alt === '') {
+        
+        if (e) {
+          e.preventDefault();
+        }
+
         return true;
       }
-
-      // When clicking the element manually with the placeholder active, 
-      // then pressing backspace, IE inserts &nbsp;, this will cover those.
-      // No point doing this for everyone due to the regex penalty.
-      if (this.element[0].innerHTML.trim().replace(/&nbsp;/gi,'') === '') {
-        this.element[0].innerHTML = this.element[0].innerHTML.replace(/&nbsp;/gi,'');
-        return true;
-      }
-
-      // This check is really just for FF due to it reporting this.element[0].innerHTML.trim() === '' as false, 
-      // and this.element[0].innerHTML.trim().length as 1, despite it being empty
-      // if (this.element[0].children.length === 0) {
-      //   return true;
-      // }
-
-      else {          
+      
+      else {
         return false;
       }
     },
@@ -346,41 +340,14 @@
 
     emptyCheck: function(e) {
       var self = this;
-
-      this.removeDeadElements();
       
       // Element is empty, so insert a placeholder <p> element
-      if (this.elementIsEmpty()) {
+      if (this.elementIsEmpty(e)) {
         var p = document.createElement('p');
-        // p.contentEditable = false;
-        // $(p).addClass('pibble-placeholder');
-        // p.appendChild(document.createTextNode("Placeholder text"));
         p.innerHTML = '&#8203;';
         this.element[0].appendChild(p);
-        // this.placeholderEl = p;
-
-        // var p = document.createElement('p');
-        // p.className = 'intro-para';
-        
-        // this.element[0].appendChild(p);
-
         this.refocus(p);
       }
-
-      // Not empty
-      // else {
-      //   // Check if current content matches the content of the placeholder at the time of insertion,
-      //   // if not, and there is actually an active placeholder, remove it. 
-      //   // this.element[0].innerHTML.trim() != this.snapshot
-      //   if ((this.placeholderEl) 
-      //       && (this.element[0].children[0] === this.placeholderEl)
-      //       && (this.element[0].children[0].nextSibling.textContent !== '')) {
-
-      //     this.placeholderEl.parentNode.removeChild(this.placeholderEl);
-      //     this.placeholderEl = null; // We've removed it, so nullify our internal reference too
-      //   }
-        
-      // }
     },
 
     removeDeadElements: function() {
@@ -428,7 +395,7 @@
       donour.innerHTML = content;
 
       // Get rid of <br /> elements altogether
-      this.removeEls(donour, 'br');
+      this.removeEls(donour, 'br', true);
 
       // Wrap top-level text nodes with a <p> element
       this.wrapTextNodes(donour);
@@ -460,10 +427,16 @@
       }
     },
 
-    removeEls: function(content, tag) {      
+    removeEls: function(content, tag, parentOnly) {      
       var els = content.querySelectorAll(tag);
       for (var i = 0; i < els.length; i++) {
-        els[i].parentNode.removeChild(els[i]);
+        if (!parentOnly) {
+          els[i].parentNode.removeChild(els[i]);  
+        }
+
+        else if (parentOnly && (els[i].parentNode === content)) {
+          els[i].parentNode.removeChild(els[i]);          
+        }
       }
     },
 
