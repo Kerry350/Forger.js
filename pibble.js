@@ -156,22 +156,10 @@
       
       $(document).on('keyup.' + this.baseClass, this.element, function(e) {
         self.handleKeyup(e);
-        // If it's a text node and it's parent is the element, it's IE being a douche.
-        // This is when you manually click back within the element from somewhere else.
-        // IE will 'focus' and report the right elements on keydown, yet by keyup a new empty
-        // text node will have been filled and inserted with the text
-        // var start = window.getSelection().getRangeAt(0).startContainer;
-
-        // if (start.nodeType === 3 && start.parentNode === self.element[0]) {
-        //   var p = document.createElement('p');
-        //   p.textContent = start.textContent;
-        //   start.parentNode.replaceChild(p, start);
-        //   self.refocus(p, p.textContent.length);
-        // }
       });
 
       $(document).on('keydown.' + this.baseClass, this.element, function(e) {
-        // self.handleKeydown(e);      
+        self.handleKeydown(e);      
       });
       
       $(document).on('mouseup.' + this.baseClass, '.' + this.baseClass, function(e) {
@@ -310,11 +298,6 @@
     handleKeydown: function(e) {
       var self = this;
 
-      // if (e.keyCode === 13) {
-      //   e.preventDefault();
-      //   this.handleEnterKey();
-      // }
-
       if ((e.keyCode === 13) && (this.options.mode === 'inline')) {
         e.preventDefault();
       }
@@ -322,137 +305,6 @@
 
     handleKeyup: function(e) {
      this.emptyCheck(e);
-    },
-
-    // Browsers are far too inconsistent in their handling of the return key. 
-    // So we handle it instead. This method is quite long, but there are a lot
-    // of use cases to handle.
-    handleEnterKey: function() {
-      var sel = window.getSelection();
-      var range = sel.getRangeAt(0);
-      var anchor = sel.anchorNode;
-      var el;
-
-  
-      // el will be a <p>, <li> and so on. 
-      if (anchor.nodeType === 1) {
-        el = anchor;
-      }
-
-      else if (anchor.nodeType === 3) {
-        // This extra check is for Firefox who sneakily goes back to inserting text 
-        // without a <p> element on <ctrl + a>, <backspace> and then <backspace> again
-        // Pop a fix in there to replace with a <p>. IE will also do this when you
-        // manually focus the element with a click, and start typing. 
-        if (anchor.parentNode === this.element[0]) {
-          el = anchor; // Text node
-          var p = document.createElement('p');
-          p.textContent = el.textContent;
-          el.parentNode.replaceChild(p, el);
-          el = p; // Set to the replaced element
-          this.refocus(el, el.textContent.length);
-        }
-
-        else {
-          // The text nodes containing <p>, <li> etc
-          el = anchor.parentNode;
-        }
-      }
-
-      // We have the el, we now need to deal with one of four scenarios:
-      
-      // Presssing enter right at the end of the node in a collapsed state, in which case just skip to the newline - endCollapsedState
-
-      if (range.collapsed && (range.startContainer.textContent.length === range.startOffset)) {
-        this.handleEndCollapsedState(sel, range, el);
-      }
-
-      // Pressing enter in a collapsed state, but part way in the node, move the rest of the node to the newline - middleCollapsedState
-
-      else if (range.collapsed && (range.startContainer.textContent.length !== range.startOffset)) {
-        this.handleMiddleCollapsedState(sel, range, el);
-      }
-
-      // Pressing enter with highlighted text within the same node, at the end of the node, delete text and go new line - endNonCollapsedState
-
-      else if (!range.collapsed && (range.startContainer === range.endContainer) && (range.endContainer.textContent.length === range.endOffset)) {
-        this.handleEndNonCollapsedState(sel, range, el);
-      }
-
-      // Pressing enter with hihglighted text within the same node, but in the middle of the node, delete text and send the rest of the text to a new line - middleNonCollapsedState
-
-      else if (!range.collapsed && (range.startContainer === range.endContainer) && (range.endContainer.textContent.length !== range.endOffset)) {
-        this.handleMiddleNonCollapsedState(sel, range, el);
-      }
-
-      // Pressing enter with highlighted text that spans multiple nodes, delete the text and don't insert a new line - spannedNonCollapsedState
-
-      else if (!range.collapsed && (range.startContainer !== range.endContainer)) {
-        this.handleSpannedNonCollapsedState(sel, range, el);
-      }
-
-      
-    },
-
-    handleEndCollapsedState: function(sel, range, el) {
-      var p = document.createElement(el.nodeName.toLowerCase());
-      DOM.insertAfter(p, el);
-      this.lastElInserted = p;
-      this.refocus(p);
-    },
-
-    handleMiddleCollapsedState: function(sel, range, el) {
-      var toRemain = range.startContainer.textContent.substring(0, range.startOffset);
-      var toExtract = range.startContainer.textContent.substring(range.startOffset);
-      el.textContent = toRemain;
-      var p = document.createElement(el.nodeName.toLowerCase());
-      p.textContent = toExtract;
-      DOM.insertAfter(p, el);
-      this.lastElInserted = p;
-      this.refocus(p);
-    },
-
-    handleEndNonCollapsedState: function(sel, range, el) {
-      var toRemain = range.startContainer.textContent.substring(0, range.startOffset);
-      el.textContent = toRemain;
-      var p = document.createElement(el.nodeName.toLowerCase());
-      DOM.insertAfter(p, el);
-      this.lastElInserted = p;
-      this.refocus(p);
-    },
-
-    handleMiddleNonCollapsedState: function(sel, range, el) {
-      var toRemain = range.startContainer.textContent.substring(0, range.startOffset);
-      var toExtract = range.startContainer.textContent.substring(range.endOffset, range.startContainer.textContent.length);
-      el.textContent = toRemain;
-      var p = document.createElement(el.nodeName.toLowerCase());
-      p.textContent = toExtract;
-      DOM.insertAfter(p, el);
-      this.lastElInserted = p;
-      this.refocus(p);
-    },
-
-    handleSpannedNonCollapsedState: function(sel, range, el) {
-      var toRemainInAnchorNode = range.startContainer.textContent.substring(0, range.startOffset);
-      var toRemainInFocusNode = range.endContainer.textContent.substring(range.endOffset, range.endContainer.textContent.length);
-      range.startContainer.textContent = toRemainInAnchorNode;
-      range.endContainer.textContent = toRemainInFocusNode;
-
-      sibling = range.startContainer.parentNode.nextSibling;
-
-      while (sibling) {
-        if (sibling !== range.endContainer.parentNode) {
-          var next = sibling.nextSibling;
-          this.element[0].removeChild(sibling);
-          sibling = next;
-        }
-
-        else {
-          sibling = null;
-        }
-      }
-      
-      this.refocus(range.endContainer);
     },
 
     elementIsEmpty: function(rerun) {
