@@ -384,8 +384,7 @@
     },
 
     getHTML: function() {
-      this.sanitiseContent(this.element[0].innerHTML);
-      return this.element.html();
+      return this.sanitiseContent(this.element[0].innerHTML);
     },
 
     sanitiseContent: function(content) {
@@ -394,7 +393,25 @@
       var donour = document.createElement('div');
       donour.innerHTML = content;
 
-      // Get rid of <br /> elements altogether
+      // When we have structures like this:
+          
+      //     <p>Text</p>
+      //     <p>
+      //       "Text"
+      //       <br>
+      //       <ul>
+      //         <li>Text</li>
+      //         <li>Text</li>
+      //       </ul>
+      //       <div>Text</div>
+      //     </p>
+      //     <p>Text</p>
+
+      // promoteElements will make sure things like <ul> or <p> elements aren't within 
+      // elements they shouldn't be. The overall structure should be fairly sound after this.
+      this.promoteElements(donour, ['ul', 'div', 'p'], ['div', 'p']);
+
+      // Get rid of top-level <br /> elements 
       this.removeEls(donour, 'br', true);
 
       // Wrap top-level text nodes with a <p> element
@@ -405,12 +422,22 @@
       this.removeEmptyElements(donour, 'p');
 
       // Replace <div> with <p> 
+      this.swapElements(donour, 'div', 'p');
 
-      // <p> elements with multiple text nodes post <br /> removal
-      this.promoteElements(['ul', 'div', 'p'], ['div', 'p']);
+      return donour.innerHTML;
     },
 
-    promoteElements: function(els, parents) {
+    swapElements: function(el, old, newElem) {
+      var elems = el.querySelectorAll(old);
+      
+      elems.forEach(function(elem) {
+        var replacement = document.createElement(newElem);
+        replacement.innerHTML = elem.innerHTML;
+        elem.parentNode.replaceChild(replacement, elem)
+      });
+    },
+
+    promoteElements: function(el, els, parents) {
       var self = this;
 
       var isEl = function(node) {
@@ -421,8 +448,8 @@
         return (parents.indexOf(node.parentNode.nodeName.toLowerCase()) !== -1) ? true : false;
       } 
 
-      this.walkTheDOM(this.element[0], function(node) {
-        if (isEl(node) && hasParent(node) && (node.parentNode !== self.element[0]) && (node !== self.element[0])) {
+      this.walkTheDOM(el, function(node) {
+        if ((node.parentNode !== el) && (node !== el) && isEl(node) && hasParent(node)) {
           $(node).unwrap();
         } 
       });
