@@ -169,7 +169,7 @@
       },
 
       introText: function() {
-        if (this.selectionIsWithinEl('h3')) {
+        if (this.selectionIsWithinEl('h4')) {
           document.execCommand('formatBlock', false, '<p>');
         }
 
@@ -336,7 +336,16 @@
       var formats = this.options.formattingOptions;
 
       for (var key in formats) {
-        var applied = document.queryCommandState(formats[key].name);
+        var applied;
+
+        if (formats[key].isActive) {
+          applied = formats[key].isActive.call(this);
+        }
+
+        else {
+          applied = document.queryCommandState(formats[key].name);
+        }
+
         self.toolbar.find('.' + formats[key].className).toggleClass('active', applied);
       };
     },
@@ -616,26 +625,38 @@
 
       heading: {
         name: 'heading',
-        className: 'icon-rotate-right',
-        enabled: true
+        className: 'icon-heading',
+        enabled: true,
+        isActive: function() {
+          return this.selectionIsWithinEl('h2') ? true : false;
+        }
       },
 
       subheading: {
         name: 'subheading',
-        className: 'icon-rotate-right',
-        enabled: true
+        className: 'icon-subheading',
+        enabled: true,
+        isActive: function() {
+          return this.selectionIsWithinEl('h3') ? true : false;
+        }
       },
 
       introText: {
         name: 'introText',
-        className: 'icon-rotate-right',
-        enabled: true
+        className: 'icon-intro-text',
+        enabled: true,
+        isActive: function() {
+          return this.selectionIsWithinEl('h4') ? true : false;
+        }
       },
 
       blockquote: {
         name: 'blockquote',
-        className: 'icon-rotate-right',
-        enabled: true
+        className: 'icon-blockquote',
+        enabled: true,
+        isActive: function() {
+          return this.selectionIsWithinEl('blockquote') ? true : false;
+        }
       }
     }
   };
