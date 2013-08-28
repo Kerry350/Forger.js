@@ -473,10 +473,10 @@
     swapElements: function(el, old, newElem) {
       var elems = el.querySelectorAll(old);
       
-      elems.forEach(function(elem) {
+      Array.prototype.forEach.call(elems, function(elem) {
         var replacement = document.createElement(newElem);
         replacement.innerHTML = elem.innerHTML;
-        elem.parentNode.replaceChild(replacement, elem)
+        elem.parentNode.replaceChild(replacement, elem);
       });
     },
 
