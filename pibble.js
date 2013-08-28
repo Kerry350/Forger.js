@@ -198,7 +198,7 @@
       }
       
       while (containerNode) {
-        if (containerNode === this.element[0]) {
+        if (containerNode === this.element[0].parentNode) {
           return false;
         }
 
