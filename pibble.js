@@ -115,7 +115,7 @@
     },
 
     applyFormatting: function(formatting) {
-      this.formatting[formatting]();
+      this.formatting[formatting].call(this);
       this.setActiveFormats();
     },
 
@@ -149,20 +149,67 @@
       },
 
       heading: function() {
-        document.execCommand('formatBlock', false, '<h2>');
+        if (this.selectionIsWithinEl('h2')) {
+          document.execCommand('formatBlock', false, '<p>');
+        }
+
+        else {
+          document.execCommand('formatBlock', false, '<h2>');
+        }
       },
 
       subheading: function() {
-        document.execCommand('formatBlock', false, '<h3>');
+        if (this.selectionIsWithinEl('h3')) {
+          document.execCommand('formatBlock', false, '<p>');
+        }
+
+        else {
+          document.execCommand('formatBlock', false, '<h3>');
+        }
       },
 
       introText: function() {
-        document.execCommand('formatBlock', false, '<h4>');
+        if (this.selectionIsWithinEl('h3')) {
+          document.execCommand('formatBlock', false, '<p>');
+        }
+
+        else {
+          document.execCommand('formatBlock', false, '<h4>');
+        }
       },
 
       blockquote: function() {
-        document.execCommand('formatBlock', false, '<blockquote>');
+        if (this.selectionIsWithinEl('blockquote')) {
+          document.execCommand('formatBlock', false, '<p>');
+        }
+
+        else {
+          document.execCommand('formatBlock', false, '<blockquote>');
+        }
       }
+    },
+
+    selectionIsWithinEl: function(el) {
+      var sel = window.getSelection();
+      var containerNode;
+      
+      if (sel.rangeCount > 0) {
+        containerNode = sel.getRangeAt(0).commonAncestorContainer;
+      }
+      
+      while (containerNode) {
+        if (containerNode === this.element[0]) {
+          return false;
+        }
+
+        if (containerNode.nodeType == 1 && containerNode.tagName.toLowerCase() == el) {
+          return true;
+        }
+
+        containerNode = containerNode.parentNode;
+      }
+      
+      return false;
     },
 
     addEventListeners: function() {
