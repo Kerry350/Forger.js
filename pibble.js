@@ -345,7 +345,7 @@
       if (this.elementIsEmpty(e)) {
         var p = document.createElement('p');
         p.innerHTML = '&#8203;';
-        this.element[0].appendChild(p);
+        this.element.html(p);
         this.refocus(p);
       }
     },
@@ -407,6 +407,25 @@
       // Replace <div> with <p> 
 
       // <p> elements with multiple text nodes post <br /> removal
+      this.promoteElements(['ul', 'div', 'p'], ['div', 'p']);
+    },
+
+    promoteElements: function(els, parents) {
+      var self = this;
+
+      var isEl = function(node) {
+        return (els.indexOf(node.nodeName.toLowerCase()) !== -1) ? true : false;
+      }
+
+      var hasParent = function(node) {
+        return (parents.indexOf(node.parentNode.nodeName.toLowerCase()) !== -1) ? true : false;
+      } 
+
+      this.walkTheDOM(this.element[0], function(node) {
+        if (isEl(node) && hasParent(node) && (node.parentNode !== self.element[0]) && (node !== self.element[0])) {
+          $(node).unwrap();
+        } 
+      });
     },
 
     removeEmptyElements: function(el, tag) {
