@@ -146,6 +146,22 @@
 
       redo: function() {
         document.execCommand('redo');
+      },
+
+      heading: function() {
+        document.execCommand('formatBlock', false, '<h2>');
+      },
+
+      subheading: function() {
+        document.execCommand('formatBlock', false, '<h3>');
+      },
+
+      introText: function() {
+        document.execCommand('formatBlock', false, '<h4>');
+      },
+
+      blockquote: function() {
+        document.execCommand('formatBlock', false, '<blockquote>');
       }
     },
 
@@ -184,10 +200,6 @@
         // Blur skipped, set selection in progress back to false
         self.menuSelectionInProgress = false;
       });          
-    },
-
-    handleClick: function(e) {
-
     },
 
     handlePaste: function(e) {
@@ -296,8 +308,6 @@
     },
 
     handleKeydown: function(e) {
-      var self = this;
-
       if ((e.keyCode === 13) && (this.options.mode === 'inline')) {
         e.preventDefault();
       }
@@ -329,36 +339,13 @@
       }
     },
 
-    removeEmptyTopLevelTextNodes: function() {
-      for (var i = 0, len = this.element[0].childNodes.length; i < len; i++) {
-        var node = this.element[0].childNodes[i];
-        if (node.nodeType === 3 && node.textContent === '') {
-          this.element[0].removeChild(node);
-        }
-      }
-    },
-
-    emptyCheck: function(e) {
-      var self = this;
-      
+    emptyCheck: function(e) {      
       // Element is empty, so insert a placeholder <p> element
       if (this.elementIsEmpty(e)) {
         var p = document.createElement('p');
         p.innerHTML = '&#8203;';
         this.element.html(p);
         this.refocus(p);
-      }
-    },
-
-    removeDeadElements: function() {
-      var children = this.element[0].children;
-
-      // Solitary element (will ignore text nodes)
-      if (children.length === 1) {
-        // Is empty, and is not an empty <p> that we've manually inserted on return
-        if ((children[0].textContent === '') && (children[0] !== this.lastElInserted)) {
-          this.element[0].removeChild(children[0]);          
-        }
       }
     },
 
@@ -576,6 +563,30 @@
 
       redo: {
         name: 'redo',
+        className: 'icon-rotate-right',
+        enabled: true
+      },
+
+      heading: {
+        name: 'heading',
+        className: 'icon-rotate-right',
+        enabled: true
+      },
+
+      subheading: {
+        name: 'subheading',
+        className: 'icon-rotate-right',
+        enabled: true
+      },
+
+      introText: {
+        name: 'introText',
+        className: 'icon-rotate-right',
+        enabled: true
+      },
+
+      blockquote: {
+        name: 'blockquote',
         className: 'icon-rotate-right',
         enabled: true
       }
