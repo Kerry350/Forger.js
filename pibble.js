@@ -252,14 +252,7 @@
     },
 
     getUniques: function(arr) {
-      var uniques = [];
-
-      for (var i = 0, len = arr.length; i < len; i++) {
-          if (uniques.indexOf(arr[i]) === -1) {
-            uniques.push(arr[i])
-          }
-      }
-      return uniques;
+	  return arr.uniq(); // Method prototype
     },
 
     // getNaughtyNodes: function(nodes) {
@@ -590,7 +583,7 @@
 
     removeEmptyElements: function(el, tag) {
       var els = el.querySelectorAll(tag);
-      for (var i = 0; i < els.length; i++) {
+      for (var i = 0, len = els.length; i < len; i++) {
         if (els[i].nodeName.toLowerCase() === tag && els[i].innerHTML.trim() === '') {
           els[i].parentNode.removeChild(els[i]);
         } 
@@ -608,7 +601,7 @@
 
     removeEls: function(content, tag, parentOnly) {      
       var els = content.querySelectorAll(tag);
-      for (var i = 0; i < els.length; i++) {
+      for (var i = 0, len = els.length; i < len; i++) {
         if (!parentOnly) {
           els[i].parentNode.removeChild(els[i]);  
         }
@@ -620,7 +613,7 @@
     },
 
     wrapTextNodes: function(content) {
-      for (var i = 0; i < content.childNodes.length; i++) {
+      for (var i = 0, len = content.childNodes.length; i < len; i++) {
         if (content.childNodes[i].nodeType === 3) {
           var p = document.createElement('p');
           p.textContent = content.childNodes[i].textContent;
