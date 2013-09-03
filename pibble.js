@@ -26,6 +26,13 @@
     for (var key in formattingOptions) {
       if (formattingOptions[key].enabled) {
         var el = $('<li />').addClass(formattingOptions[key].className).data('format-option', formattingOptions[key].name);
+		/*TODO: icons with fonts awesome by class - Text Editor Icons
+		  ADD CSS > font-awesome.min.css (index.html) line:10
+		  IMPORTANT>> assess conflict with li
+		  el.html('<i class="'+formattingOptions[key].className+'"></i> ');  */
+		  
+		el.html(formattingOptions[key].className);
+        
         ul.append(el); 
       }
     }
@@ -154,9 +161,16 @@
       italic: function() {
         document.execCommand('italic');
       },
+	  
+      underline: function() {
+        document.execCommand('underline');
+      },	  
 
       link: function() {
-
+		/*TODO: document.execCommand('CreateLink', true)     //displays user dialog
+			    OR
+				document.execCommand('CreateLink', false, 'http://www.example.com')
+		*/
       },
 
       insertunorderedlist: function() {
@@ -199,8 +213,38 @@
       },
 
       paragraph: function() {
-
-      }
+		
+      },
+	  
+	  highlight: function(){
+		document.execCommand ('backColor', false, "#FFFF00");
+	  },
+	  
+	  strikethrough: function(){
+		document.execCommand('StrikeThrough', true);
+	  },
+	  
+	  subscript: function(){
+		document.execCommand('Subscript');
+	  },
+	  
+	  superscript: function(){
+		document.execCommand('Superscript');
+	  },
+	  /*
+	  TODO: verify this*/
+	  justifyleft: function(){
+		document.execCommand('JustifyLeft');
+	  }, 
+	  
+	  justifycenter: function(){
+		document.execCommand('JustifyCenter');
+	  },
+	  
+	  justifyright: function(){
+		document.execCommand('JustifyRight');
+	  }	  
+	  
     },
 
     canApplyHeading: function() {
@@ -684,6 +728,12 @@
         enabled: true
       },
 
+      underline: {
+        name: 'underline',
+        className: 'icon-underline',
+        enabled: true
+      },
+	  
       insertunorderedlist: {
         name: 'insertunorderedlist',
         className: 'icon-list-ul',
@@ -742,7 +792,58 @@
         isActive: function() {
           return this.selectionIsWithinEl('blockquote') ? true : false;
         }
-      }
+      },
+	  
+	  //Highchart
+	  highlight: {
+		  name:'highlight',
+		  className:'icon-highlight',
+		  enabled:true
+	  },
+	  
+	  //Strikethrough - Draws a line through the middle of the current selection
+	  strikethrough: {
+		  name:'strikethrough',
+		  className:'icon-strikethrough',
+		  enabled:true
+	  },
+	  
+	  //Subscript - Lowers the current selection to the subscript position
+	  subscript: {
+		  name:'subscript',
+		  className:'icon-subscript',
+		  enabled:true
+	  },
+	  
+	  //Superscript - Raises the current selection to the superscript position
+	  superscript: {
+		  name:'superscript',
+		  className:'icon-superscript',
+		  enabled:true
+	  },
+	
+	  //JustifyLeft - Aligns the current selection to the left
+	  justifyleft :{
+		  name: 'justifyleft',
+		  className: 'icon-justifyleft',
+		  enabled:true
+	  },
+	  
+	  //JustifyRight - Aligns the current selection to the center
+	  justifycenter: {
+		  name: 'justifycenter',
+		  className: 'icon-justifycenter',
+		  enabled:true
+	  },
+	  
+	  //JustifyRight - Aligns the current selection to the right
+	  justifyright: {
+		  name: 'justifyright',
+		  className: 'icon-justifyright',
+		  enabled:true
+	  }	  
+	  
+	  
     }
   };
 
