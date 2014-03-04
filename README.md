@@ -3,8 +3,8 @@ Forger.js
 
 forge:
 
-1) create (something) strong, enduring, or successful.
-2) move forward gradually or steadily.
+* create (something) strong, enduring, or successful.
+* move forward gradually or steadily.
 
 A lightweight editor
 
