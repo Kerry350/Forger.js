@@ -16,7 +16,7 @@ Due to circumstances far beyond my control I've had to change the name of this r
 
 The plugin **will** be back. Very soon. It will be "bigger, stronger, faster", sharing nothing in common with it's bygone brother other than being a WYSIWYG editor. 
 
-But for now please bear with me. Forger.js is coming soon :)
+But for now please bear (and Owl) with me. Forger.js is coming soon :)
 
 
 
