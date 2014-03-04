@@ -1,6 +1,11 @@
 Forger.js
 =========
 
+forge:
+
+1) create (something) strong, enduring, or successful.
+2) move forward gradually or steadily.
+
 A lightweight editor
 
 # Where's everything gone?
@@ -11,4 +16,7 @@ The plugin **will** be back. Very soon. It will be "bigger, stronger, faster", s
 
 If you'd like to know why this change has taken place in more detail, feel free to contact me on Twitter. 
 
-But for now please bear with me. 
+But for now please bear with me. Forger.js is coming soon :)
+
+
+
