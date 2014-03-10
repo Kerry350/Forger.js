@@ -1,0 +1,47 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+  
+	<title>Forger.js Test Page</title>
+  
+	<link rel="stylesheet" href="forger.css">
+	<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+	<link href='http://fonts.googleapis.com/css?family=Roboto:400,700,700italic,400italic,100,100italic,500italic,500,300,300italic' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<div id="container">
+		<h1>Forger.js Demo</h1>
+		
+		<div id="test">
+			<p>Much WYSIWYG</p>
+			<p>Very formatting</p>
+			<p>Such bolds</p>
+		</div>
+
+		<h2 id="demo">
+			
+		</h2>
+
+		<div id="other">
+			<p>Pikachu</p>
+			<p>Onix</p>
+			<p>Vulpix</p>
+			<p>Leberkas pig venison hamburger beef ribs sirloin. Pork shankle pork belly ribeye tri-tip fatback. Pork belly short ribs ribeye andouille brisket pork chop swine biltong meatloaf. Ham hock ground round ball tip swine bacon jowl pig. Pig bacon short loin andouille flank capicola kielbasa pork boudin ham hock tongue meatloaf. Tenderloin ham capicola swine short ribs kevin pork chop chuck kielbasa meatball shoulder.</p>
+			<p>Leberkas pig venison hamburger beef ribs sirloin. Pork shankle pork belly ribeye tri-tip fatback. Pork belly short ribs ribeye andouille brisket pork chop swine biltong meatloaf. Ham hock ground round ball tip swine bacon jowl pig. Pig bacon short loin andouille flank capicola kielbasa pork boudin ham hock tongue meatloaf. Tenderloin ham capicola swine short ribs kevin pork chop chuck kielbasa meatball shoulder.</p>
+			<p>Leberkas pig venison hamburger beef ribs sirloin. Pork shankle pork belly ribeye tri-tip fatback. Pork belly short ribs ribeye andouille brisket pork chop swine biltong meatloaf. Ham hock ground round ball tip swine bacon jowl pig. Pig bacon short loin andouille flank capicola kielbasa pork boudin ham hock tongue meatloaf. Tenderloin ham capicola swine short ribs kevin pork chop chuck kielbasa meatball shoulder.</p>
+		</div>
+	</div>	
+	
+	<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+	<script src="dist/forger.js"></script>
+	<script>
+		new Forger(document.querySelector('#test'));
+
+		// Optional jQuery wrapper
+		$('#other').Forger();
+	</script>
+</body>
+</html>
