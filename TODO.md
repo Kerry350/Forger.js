@@ -5,7 +5,7 @@
 * Make hooliganismMode option do stuff
 * Fix Blockquote methods
 * Remove jQuery references
-* Make a 'heading' painter that manages h1, h2 and h3 as a dropdown. I think this will be much nicer. 
+* ~~Make a 'heading' painter that manages h1, h2 and h3 as a dropdown. I think this will be much nicer.~~ 
 * Build the History manager to manage undo / redo as the browser does it so inconsistently
 * ~~Build the plugin setup~~
 * Build the focus mode plugin
@@ -15,4 +15,5 @@
 * Add in some tests
 * Fix toolbar positioning
 * Add in animation for link input appearing
+* Finish / tidy up the CSS
 * All the todos in comments...

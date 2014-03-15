@@ -78,7 +78,7 @@ Toolbar.prototype = {
 		this.attrs.toolbarHeight = $(this.el).outerHeight();
 		this.attrs.toolbarWidth = $(this.el).outerWidth();
 		this.attrs.toolbarArrowLeftOffset = parseInt(getComputedStyle($(this.el).find('.arrow')[0]).left);
-  	this.attrs.toolbarArrowHeight = $(this.el).find('.arrow').outerHeight(); 
+  		this.attrs.toolbarArrowHeight = $(this.el).find('.arrow').outerHeight(); 
 
 		this.returnFromQueryable();
 	},
@@ -142,19 +142,19 @@ Toolbar.prototype = {
 
 	hide: function() {
 		Log("Toolbar: Hiding");
-  	this.isHidden = true;
-  	this.el.classList.remove('show');
-  	this.el.classList.add('hide');
+	  	this.isHidden = true;
+	  	this.el.classList.remove('show');
+	  	this.el.classList.add('hide');
 	},
 
 	setActiveFormats: function() {
 		this.painters.forEach(function(painter) {
-	  	painter.assignActiveState();
+	  		painter.assignActiveState();
 		}); 
 	},
 
 	setLinkPlaceholder: function(url) {
-  	this.el.querySelector('.link').querySelector('input').value = (url || '');
+  		this.el.querySelector('.link').querySelector('input').value = (url || '');
 	}
 };
 

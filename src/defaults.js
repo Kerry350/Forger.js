@@ -16,6 +16,12 @@ module.exports = {
       enabled: true,
     },
 
+    Headings: {
+      className: 'fa fa-font headings',
+      enabled: true, 
+      levels: [1, 2, 3]
+    },
+
     Bold: {
       className: 'fa fa-bold',
       enabled: true
@@ -47,21 +53,6 @@ module.exports = {
       //     className: 'fa-rotate-right',
       //     enabled: true
       // },
-
-    H1: {
-      className: 'fa fa-heading',
-      enabled: true
-    },
-
-    H2: {
-      className: 'fa fa-subheading',
-      enabled: true
-    },
-
-    H3: {
-      className: 'fa fa-intro-text',
-      enabled: true
-    },
 
     Blockquote: {
       className: 'fa fa-quote-right',

@@ -193,7 +193,6 @@ when element dimensions need querying */
      -moz-transition: all 0.3s ease-out;  
        -o-transition: all 0.3s ease-out; 
           transition: all 0.3s ease-out;
-  overflow: hidden;
   float: left;
   height: 100%;
 }
@@ -286,6 +285,25 @@ when element dimensions need querying */
   min-width: 20px;
   text-align: center;  
   line-height: 40px;
+  position: relative;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.forger-toolbar li i.headings + ul {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: #242424;
+  padding: 0;
+  margin: 0;
+}
+
+.forger-toolbar li i.headings + ul > li {
+  display: block;
+  padding: 0 5px;
+  font-size: 10px;
 }
 
 .forger-toolbar li:last-child {

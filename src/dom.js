@@ -1,3 +1,5 @@
+var Constants = require('./constants');
+
 // General useful utility functions
 var Utils = {
   stringStartsWith: function (string, pattern) {

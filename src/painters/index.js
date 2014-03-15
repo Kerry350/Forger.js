@@ -5,6 +5,7 @@
 var Painters = {
   Blockquote: require('./blockquote'),
   Bold: require('./bold'),
+  Headings: require('./headings'),
   H1: require('./h1'),
   H2: require('./h2'),
   H3: require('./h3'),

@@ -20,6 +20,7 @@ var canApplyHeading = function() {
   return false;
 };
 
+// NOTE: H1, H2, H3  have all been replaced by the Headings painter, this is left in for prosperity at the moment
 var H1 = function(forger) {
   this.enabled = true;
   this.forger = forger;

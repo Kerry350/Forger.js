@@ -138,6 +138,12 @@ module.exports = {
       enabled: true,
     },
 
+    Headings: {
+      className: 'fa fa-font headings',
+      enabled: true, 
+      levels: [1, 2, 3]
+    },
+
     Bold: {
       className: 'fa fa-bold',
       enabled: true
@@ -169,21 +175,6 @@ module.exports = {
       //     className: 'fa-rotate-right',
       //     enabled: true
       // },
-
-    H1: {
-      className: 'fa fa-heading',
-      enabled: true
-    },
-
-    H2: {
-      className: 'fa fa-subheading',
-      enabled: true
-    },
-
-    H3: {
-      className: 'fa fa-intro-text',
-      enabled: true
-    },
 
     Blockquote: {
       className: 'fa fa-quote-right',
@@ -222,6 +213,8 @@ module.exports = {
 };
 
 },{}],3:[function(require,module,exports){
+var Constants = require('./constants');
+
 // General useful utility functions
 var Utils = {
   stringStartsWith: function (string, pattern) {
@@ -368,7 +361,7 @@ module.exports = {
   DOM: DOM
 }
 
-},{}],4:[function(require,module,exports){
+},{"./constants":1}],4:[function(require,module,exports){
 'use strict';
 
 // The core Editor instance, monitors the contentEditable element,
@@ -625,7 +618,7 @@ Editor.prototype = {
 
 module.exports = Editor;
 
-},{"./dom":3,"./logger":8,"./range_and_selection":23}],5:[function(require,module,exports){
+},{"./dom":3,"./logger":8,"./range_and_selection":24}],5:[function(require,module,exports){
 'use strict';
 
 var ShortcutManager = require('./shortcut_manager');
@@ -737,7 +730,7 @@ Forger.DEBUG = true;
 
 module.exports = Forger;
 
-},{"./defaults":2,"./dom":3,"./editor":4,"./formatter":6,"./painters":15,"./sanitiser":24,"./shortcut_manager":25,"./toolbar":26}],6:[function(require,module,exports){
+},{"./defaults":2,"./dom":3,"./editor":4,"./formatter":6,"./painters":16,"./sanitiser":25,"./shortcut_manager":26,"./toolbar":27}],6:[function(require,module,exports){
 function Formatter () {
 
 }
@@ -782,9 +775,9 @@ module.exports = function() {
 var Forger = require('./forger');
 
 function Log(message) {
-	if (Forger.DEBUG) {
-		console.log(message);
-	}
+  if (Forger.DEBUG) {
+    console.log(message);
+  }
 }
 
 module.exports = Log;
@@ -800,7 +793,7 @@ require('./plugins');
 
 // Export the Forger constructor globally
 window.Forger = Forger;
-},{"./forger":5,"./jquery_wrapper":7,"./plugins":21}],10:[function(require,module,exports){
+},{"./forger":5,"./jquery_wrapper":7,"./plugins":22}],10:[function(require,module,exports){
 var Log = require('../logger');
 var TextSelection = require('../range_and_selection');
 var DOM = require('../dom').DOM;
@@ -902,7 +895,7 @@ MicroEvent.mixin(Blockquote);
 module.exports = Blockquote;
 
 
-},{"../constants":1,"../dom":3,"../logger":8,"../range_and_selection":23}],11:[function(require,module,exports){
+},{"../constants":1,"../dom":3,"../logger":8,"../range_and_selection":24}],11:[function(require,module,exports){
 var Log = require('../logger');
 var TextSelection = require('../range_and_selection');
 var DOM = require('../dom').DOM;
@@ -948,7 +941,7 @@ MicroEvent.mixin(Bold);
 module.exports = Bold;
 
 
-},{"../dom":3,"../logger":8,"../range_and_selection":23}],12:[function(require,module,exports){
+},{"../dom":3,"../logger":8,"../range_and_selection":24}],12:[function(require,module,exports){
 var Log = require('../logger');
 var TextSelection = require('../range_and_selection');
 var DOM = require('../dom').DOM;
@@ -971,6 +964,7 @@ var canApplyHeading = function() {
   return false;
 };
 
+// NOTE: H1, H2, H3  have all been replaced by the Headings painter, this is left in for prosperity at the moment
 var H1 = function(forger) {
   this.enabled = true;
   this.forger = forger;
@@ -1025,7 +1019,7 @@ H1.prototype = {
 MicroEvent.mixin(H1);
 
 module.exports = H1;
-},{"../dom":3,"../logger":8,"../range_and_selection":23}],13:[function(require,module,exports){
+},{"../dom":3,"../logger":8,"../range_and_selection":24}],13:[function(require,module,exports){
 var Log = require('../logger');
 var TextSelection = require('../range_and_selection');
 var DOM = require('../dom').DOM;
@@ -1048,6 +1042,7 @@ var canApplyHeading = function() {
   return false;
 };
 
+// NOTE: H1, H2, H3  have all been replaced by the Headings painter, this is left in for prosperity at the moment
 var H2 = function(forger) {
   this.enabled = true;
   this.forger = forger;
@@ -1103,7 +1098,7 @@ MicroEvent.mixin(H2);
 module.exports = H2;
 
 
-},{"../dom":3,"../logger":8,"../range_and_selection":23}],14:[function(require,module,exports){
+},{"../dom":3,"../logger":8,"../range_and_selection":24}],14:[function(require,module,exports){
 var Log = require('../logger');
 var TextSelection = require('../range_and_selection');
 var DOM = require('../dom').DOM;
@@ -1126,6 +1121,7 @@ var canApplyHeading = function() {
   return false;
 };
 
+// NOTE: H1, H2, H3  have all been replaced by the Headings painter, this is left in for prosperity at the moment
 var H3 = function(forger) {
   this.enabled = true;
   this.forger = forger;
@@ -1182,7 +1178,146 @@ MicroEvent.mixin(H3);
 module.exports = H3;
 
 
-},{"../dom":3,"../logger":8,"../range_and_selection":23}],15:[function(require,module,exports){
+},{"../dom":3,"../logger":8,"../range_and_selection":24}],15:[function(require,module,exports){
+var Log = require('../logger');
+var TextSelection = require('../range_and_selection');
+var DOM = require('../dom').DOM;
+var Constants = require('../constants');
+
+var canApplyHeading = function() {
+  var range = new TextSelection().getRange();
+  var allowedParents = Constants.allowedHeaderParents;
+  var nodes = new TextSelection().getNodesInRange();
+
+  if (DOM.getBlockParent(range.startContainer) === DOM.getBlockParent(range.endContainer)) {
+    if (!DOM.containsEl(nodes, ['br'])) {
+      var parent = DOM.getBlockParent(range.startContainer);
+      if (allowedParents.indexOf(parent.nodeName.toLowerCase()) !== -1) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
+
+var Headings = function(forger) {
+  this.enabled = true;
+  this.forger = forger;
+  this.name = 'Headings';
+  this.className = forger.options.painters[this.name].className;
+  this.levelMenuOpen = false;
+};
+
+Headings.prototype = {
+  getDOMButton: function() {
+    var li = document.createElement('li');
+    var i = document.createElement('i');
+    i.className = this.className;
+    li.appendChild(i);
+    
+    var ul = document.createElement('ul');
+    ul.className = 'heading-levels';
+    ul.style.display = 'none';
+
+    // Append a button for each of the levels wanted. 1 === H1 and so on. 
+    this.forger.options.painters[this.name].levels.forEach(function(level) {
+      var levelButton = document.createElement('li');
+      levelButton.textContent = 'H' + level;
+      levelButton.setAttribute('data-heading-level', level);
+      ul.appendChild(levelButton);
+    });
+
+    li.appendChild(ul);
+
+    this.button = li;
+    this.levelMenu = ul;
+
+    setTimeout(function() {
+      this.addEventListeners();
+    }.bind(this), 1);
+
+    return this.button;
+  },
+
+  addEventListeners: function() {
+    var levelMenu = this.button.querySelector('.heading-levels');
+
+    // TODO: Tidy this up, named functions to unbind rather than anonymous functions
+    levelMenu.addEventListener('mousedown', function(e) {
+      if (e.target && e.target.nodeName.toLowerCase() === 'li') {
+        var level = e.target.getAttribute('data-heading-level');
+        e.stopPropagation();
+
+        var ts = new TextSelection();
+        ts.restoreSelection(ts.selection, ts.getRange(), function() {
+          this.applyLevelFormatting(level);
+        }.bind(this));
+      }
+    }.bind(this));
+  },
+
+  canApply: function() {
+    return canApplyHeading();
+  },
+
+  showLevelMenu: function() {
+    this.levelMenu.style.display = 'block'; 
+    this.levelMenuOpen = true;
+  },
+
+  hideLevelMenu: function() {
+    this.levelMenu.style.display = 'none';
+    this.levelMenuOpen = false;
+  },
+
+  apply: function() {
+    if (this.levelMenuOpen) {
+      this.hideLevelMenu();  
+    } else {
+      this.showLevelMenu();
+    }
+  },
+
+  // Only allow headings for single lines of text currently wrapped in a <p> or <div>
+  // (this will also work with top-level text nodes in FF, as the main Forger wrapper is a <div>)
+  applyLevelFormatting: function(level) {
+    if (this.canApply()) {
+      if (DOM.isEl(DOM.getBlockParent(new TextSelection().getRange().startContainer), ['p', 'div'])) {
+        document.execCommand('formatBlock', false, '<h' + level+ '>');
+      }
+
+      else {
+        document.execCommand('formatBlock', false, '<p>');
+      }
+
+      this.hideLevelMenu();
+    }
+
+    this.trigger('formatting:applied');
+  },
+
+  // TODO: Assign active states to each level button too
+  assignActiveState: function() {
+    var startContainer = new TextSelection().getRange().startContainer;
+
+    // TODO: Make this nicer, elIsWithinEl should accept an array
+    var active = DOM.elIsWithinEl(startContainer, 'h1', this.forger.editor.el.parentNode) ||
+    DOM.elIsWithinEl(startContainer, 'h2', this.forger.editor.el.parentNode) ||
+    DOM.elIsWithinEl(startContainer, 'h3', this.forger.editor.el.parentNode) 
+
+    if (active) {
+      this.button.classList.add('active');
+    } else {
+      this.button.classList.remove('active');
+    }
+  }
+};
+
+MicroEvent.mixin(Headings);
+
+module.exports = Headings;
+},{"../constants":1,"../dom":3,"../logger":8,"../range_and_selection":24}],16:[function(require,module,exports){
 // Painters are just little classes that apply one type of formatting
 // Think of them as little dudes with paintbrushes painting on a nice Bold,
 // or an Italic...
@@ -1190,6 +1325,7 @@ module.exports = H3;
 var Painters = {
   Blockquote: require('./blockquote'),
   Bold: require('./bold'),
+  Headings: require('./headings'),
   H1: require('./h1'),
   H2: require('./h2'),
   H3: require('./h3'),
@@ -1201,7 +1337,7 @@ var Painters = {
 
 module.exports = Painters;
 
-},{"./blockquote":10,"./bold":11,"./h1":12,"./h2":13,"./h3":14,"./italic":16,"./link":17,"./ordered_list":18,"./unordered_list":19}],16:[function(require,module,exports){
+},{"./blockquote":10,"./bold":11,"./h1":12,"./h2":13,"./h3":14,"./headings":15,"./italic":17,"./link":18,"./ordered_list":19,"./unordered_list":20}],17:[function(require,module,exports){
 var Log = require('../logger');
 var TextSelection = require('../range_and_selection');
 var DOM = require('../dom').DOM;
@@ -1244,7 +1380,7 @@ Italic.prototype = {
 MicroEvent.mixin(Italic);
 
 module.exports = Italic;
-},{"../dom":3,"../logger":8,"../range_and_selection":23}],17:[function(require,module,exports){
+},{"../dom":3,"../logger":8,"../range_and_selection":24}],18:[function(require,module,exports){
 var Log = require('../logger');
 var TextSelection = require('../range_and_selection');
 var DOM = require('../dom').DOM;
@@ -1409,7 +1545,7 @@ MicroEvent.mixin(Link);
 module.exports = Link;
 
 
-},{"../dom":3,"../logger":8,"../range_and_selection":23}],18:[function(require,module,exports){
+},{"../dom":3,"../logger":8,"../range_and_selection":24}],19:[function(require,module,exports){
 var Log = require('../logger');
 var TextSelection = require('../range_and_selection');
 var DOM = require('../dom').DOM;
@@ -1453,7 +1589,7 @@ MicroEvent.mixin(OrderedList);
 module.exports = OrderedList;
 
 
-},{"../dom":3,"../logger":8,"../range_and_selection":23}],19:[function(require,module,exports){
+},{"../dom":3,"../logger":8,"../range_and_selection":24}],20:[function(require,module,exports){
 var Log = require('../logger');
 var TextSelection = require('../range_and_selection');
 var DOM = require('../dom').DOM;
@@ -1498,13 +1634,13 @@ MicroEvent.mixin(UnorderedList);
 module.exports = UnorderedList;
 
 
-},{"../dom":3,"../logger":8,"../range_and_selection":23}],20:[function(require,module,exports){
+},{"../dom":3,"../logger":8,"../range_and_selection":24}],21:[function(require,module,exports){
 function focusPlugin (forger) {
 
 }
 
 module.exports = focusPlugin;
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 var Forger = require('../forger');
 var focusPlugin = require('./focus_mode');
 var wordsPlugin = require('./words');
@@ -1534,13 +1670,13 @@ provide the plugin functionality. By being handed the Forger instance to work
 with one has access to the toolbar, editor, formatter and so on. */
 
 
-},{"../forger":5,"./focus_mode":20,"./words":22}],22:[function(require,module,exports){
+},{"../forger":5,"./focus_mode":21,"./words":23}],23:[function(require,module,exports){
 function wordsPlugin (forger) {
 
 }
 
 module.exports = wordsPlugin;
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 // Manage current Window selections / ranges nicely
 function TextSelection() {
   this.selection = window.getSelection();
@@ -1651,7 +1787,7 @@ TextSelection.prototype = {
 
 module.exports = TextSelection;
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 'use strict';
 
 function Sanitiser (html) {
@@ -1661,7 +1797,7 @@ function Sanitiser (html) {
 Sanitiser.prototype = {
   // Sanitise mostly tidies up the mess made by cross-browser inconsistencies
   // within contenteditable elements
-	sanitise: function() {
+  sanitise: function() {
     var self = this;
 
     // Replace non-break spaces with a proper space
@@ -1781,7 +1917,7 @@ Sanitiser.prototype = {
 };
 
 module.exports = Sanitiser;
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 var keys = {
 	16: 'shift',
 	17: 'ctrl',
@@ -1840,7 +1976,7 @@ ShortcutManager.prototype.destroy = function() {
 
 module.exports = ShortcutManager;
 
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 'use strict';
 
 var TOOLBAR_HTML = String() +
@@ -1921,7 +2057,7 @@ Toolbar.prototype = {
 		this.attrs.toolbarHeight = $(this.el).outerHeight();
 		this.attrs.toolbarWidth = $(this.el).outerWidth();
 		this.attrs.toolbarArrowLeftOffset = parseInt(getComputedStyle($(this.el).find('.arrow')[0]).left);
-  	this.attrs.toolbarArrowHeight = $(this.el).find('.arrow').outerHeight(); 
+  		this.attrs.toolbarArrowHeight = $(this.el).find('.arrow').outerHeight(); 
 
 		this.returnFromQueryable();
 	},
@@ -1985,21 +2121,21 @@ Toolbar.prototype = {
 
 	hide: function() {
 		Log("Toolbar: Hiding");
-  	this.isHidden = true;
-  	this.el.classList.remove('show');
-  	this.el.classList.add('hide');
+	  	this.isHidden = true;
+	  	this.el.classList.remove('show');
+	  	this.el.classList.add('hide');
 	},
 
 	setActiveFormats: function() {
 		this.painters.forEach(function(painter) {
-	  	painter.assignActiveState();
+	  		painter.assignActiveState();
 		}); 
 	},
 
 	setLinkPlaceholder: function(url) {
-  	this.el.querySelector('.link').querySelector('input').value = (url || '');
+  		this.el.querySelector('.link').querySelector('input').value = (url || '');
 	}
 };
 
 module.exports = Toolbar;
-},{"./dom":3,"./logger":8,"./range_and_selection":23}]},{},[9])
+},{"./dom":3,"./logger":8,"./range_and_selection":24}]},{},[9])

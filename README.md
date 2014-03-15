@@ -73,19 +73,10 @@ var options = {
             enabled: true
         },
 
-        H1: {
-            className: 'fa fa-heading',
-            enabled: true
-        },
-
-        H2: {
-            className: 'fa fa-subheading',
-            enabled: true
-        },
-
-        H3: {
-            className: 'fa fa-intro-text',
-            enabled: true
+        Headings: {
+            className: 'fa fa-font headings',
+            enabled: true, 
+            levels: [1, 2, 3] // H1, H2, H3 etc
         },
 
         Blockquote: {
