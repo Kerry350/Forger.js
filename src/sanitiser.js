@@ -7,7 +7,7 @@ function Sanitiser (html) {
 Sanitiser.prototype = {
   // Sanitise mostly tidies up the mess made by cross-browser inconsistencies
   // within contenteditable elements
-	sanitise: function() {
+  sanitise: function() {
     var self = this;
 
     // Replace non-break spaces with a proper space

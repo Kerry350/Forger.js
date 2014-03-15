@@ -14,4 +14,5 @@
 * ~~Use CommonJS modules (by way of Browserify) for handling dependencies~~
 * Add in some tests
 * Fix toolbar positioning
+* Add in animation for link input appearing
 * All the todos in comments...
