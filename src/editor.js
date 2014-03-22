@@ -209,12 +209,13 @@ Editor.prototype = {
       return false;
     }
 
-    var node = DOM.getFirstNonTextParent(new TextSelection().getRange().startContainer);
+    if (this.options.hooliganismDisabled) {
+      
+      var node = DOM.getFirstNonTextParent(new TextSelection().getRange().startContainer);
 
-    // Don't let people just sit smashing the Enter key making new paragraphs. I might make this an option
-    // rather than enforcing it...
-    if ((e.keyCode === 13) && !node.textContent.trim() && (node.nodeName.toLowerCase() !== 'li')) {
-      e.preventDefault();
+      if ((e.keyCode === 13) && !node.textContent.trim() && (node.nodeName.toLowerCase() !== 'li')) {
+        e.preventDefault();
+      }
     }
   },
 
