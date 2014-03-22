@@ -16,6 +16,12 @@ Due to circumstances far beyond my control I had to change the name of this repo
 
 Because of this, Forger.js was born.
 
+# Demo 
+
+You can play with Forger.js [here](http://kerry350.github.io/Forger.js/).
+
+Please bare in mind that there are a few things to fix. I've tried to be super transparent with these issues, they will either be in the TODO.md file or denoted by `// TODO` comments in the code. I'm working as hard as I can to get these checked off when I can. 
+
 # Dependencies
 
 Forger does make use of reMarked.js and MicroEvent.js, these are packaged in the /dist versions for you already. Forger doesn't have a dependency on jQuery, although you are free to make use of the optional jQuery wrapper if you want. 
