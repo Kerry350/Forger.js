@@ -294,7 +294,6 @@ when element dimensions need querying */
   position: absolute;
   top: 100%;
   left: 0;
-  right: 0;
   background-color: #242424;
   padding: 0;
   margin: 0;
@@ -303,7 +302,8 @@ when element dimensions need querying */
 .forger-toolbar li i.headings + ul > li {
   display: block;
   padding: 0 5px;
-  font-size: 10px;
+  font-size: 14px;
+  margin-right: 0;
 }
 
 .forger-toolbar li:last-child {

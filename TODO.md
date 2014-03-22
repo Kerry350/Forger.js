@@ -17,3 +17,4 @@
 * Add in animation for link input appearing
 * Finish / tidy up the CSS
 * All the todos in comments...
+* Allow a way to unlink links
