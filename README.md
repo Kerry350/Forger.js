@@ -136,6 +136,10 @@ TODO: Docs for this coming soon
 
 # Credits
 
+* HTML to Markdown parsing is provided by [reMarked.js](http://leeoniya.github.io/reMarked.js/) library. 
+* Lightweight event emitter capabilities are provided by [MicroEvent.js](https://github.com/jeromeetienne/microevent.js).
+* Some CSS animations are provided by [Animate.css](http://daneden.github.io/animate.css/).
+
 # License 
 
 The MIT License (MIT)
