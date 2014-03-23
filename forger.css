@@ -207,6 +207,7 @@ when element dimensions need querying */
 
 .forger-toolbar .link {
   height: 100%;
+  display: none;
 }
 
 .forger-toolbar .link > .link-wrapper {

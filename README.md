@@ -32,6 +32,10 @@ Simply make a new Forger instance passing through the element you'd like to have
 
 `new Forger(document.querySelector('#test'), options);`
 
+# Styling (CSS)
+
+I've made the assumption that most people will want to style their own Forger instances. However, there is 'default' Forger.js CSS within `forger.css`. At the moment this is mixed in with CSS I'm using on the demo page, I'll be looking to split this out soon so people can use it properly. I'll also be denoting what is required for Forger.js to work properly, and which styles are totally up to you to implement. That way you can just scrap the optional pieces if you wish. Feel free to use the default look though. 
+
 # Events
 
 There are a number of Forger events you can hook in to. These are:

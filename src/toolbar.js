@@ -54,7 +54,7 @@ Toolbar.prototype = {
 
 		// Append and bind to all of our Painter buttons
 		this.painters.forEach(function(painter) {
-	    var button = painter.getDOMButton();
+	     var button = painter.getDOMButton();
 			ul.appendChild(button);
 		
 			// Must be on 'mousedown' VS 'click' due to the speed of loss of focus
@@ -75,10 +75,10 @@ Toolbar.prototype = {
 	setInitialState: function() {
 		this.makeQueryable();
   
-		this.attrs.toolbarHeight = $(this.el).outerHeight();
-		this.attrs.toolbarWidth = $(this.el).outerWidth();
-		this.attrs.toolbarArrowLeftOffset = parseInt(getComputedStyle($(this.el).find('.arrow')[0]).left);
-  		this.attrs.toolbarArrowHeight = $(this.el).find('.arrow').outerHeight(); 
+		this.attrs.toolbarHeight = DOM.outerHeight(this.el);
+		this.attrs.toolbarWidth = DOM.outerWidth(this.el);
+		this.attrs.toolbarArrowLeftOffset = parseInt(getComputedStyle(this.el.querySelector('.arrow')).left);
+  		this.attrs.toolbarArrowHeight = DOM.outerHeight(this.el.querySelector('.arrow'));
 
 		this.returnFromQueryable();
 	},
@@ -124,7 +124,7 @@ Toolbar.prototype = {
 
 			top: function() {
 				this.el.style.top = ((offset.top + scrollTop) - this.attrs.toolbarHeight - this.attrs.toolbarArrowHeight) + 'px';
-				this.el.style.left = ((offset.left + offset.right) / 2) - ($(this.el).outerWidth() / 2) + 'px';
+				this.el.style.left = ((offset.left + offset.right) / 2) - (this.attrs.toolbarWidth / 2) + 'px';
 			}
 		};
 

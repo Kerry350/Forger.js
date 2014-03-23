@@ -73,7 +73,7 @@ Sanitiser.prototype = {
   reorderElements: function(el, els, parents) {
     this.walkTheDOM(el, function(node) {
       if ((node.parentNode !== el) && (node !== el) && DOM.isEl(node, els) && DOM.hasParent(node, parents)) {
-        $(node).unwrap();
+        DOM.unwrap([node]);
       }
     });
   },

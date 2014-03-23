@@ -353,6 +353,16 @@ var DOM = {
       parent.removeChild(nodes[0]);
       nodes.shift();
     }
+  },
+
+  outerHeight: function(node) {
+    var height = node.offsetHeight;   
+    return height;
+  },
+
+  outerWidth: function(node) {
+    var width = node.offsetWidth;
+    return width;
   }
 };
 
@@ -573,12 +583,13 @@ Editor.prototype = {
       return false;
     }
 
-    var node = DOM.getFirstNonTextParent(new TextSelection().getRange().startContainer);
+    if (this.options.hooliganismDisabled) {
+      
+      var node = DOM.getFirstNonTextParent(new TextSelection().getRange().startContainer);
 
-    // Don't let people just sit smashing the Enter key making new paragraphs. I might make this an option
-    // rather than enforcing it...
-    if ((e.keyCode === 13) && !node.textContent.trim() && (node.nodeName.toLowerCase() !== 'li')) {
-      e.preventDefault();
+      if ((e.keyCode === 13) && !node.textContent.trim() && (node.nodeName.toLowerCase() !== 'li')) {
+        e.preventDefault();
+      }
     }
   },
 
@@ -1505,7 +1516,7 @@ Link.prototype = {
     setTimeout(function() {
       if (url) {
         var start = DOM.getFirstNonTextParent(this.selectionBeforeInput.startContainer);
-        var node = $(start).find('a')[0];
+        var node = start.querySelectorAll('a')[0];
         var range = document.createRange();
         range.selectNode(node);
       }
@@ -1863,7 +1874,7 @@ Sanitiser.prototype = {
   reorderElements: function(el, els, parents) {
     this.walkTheDOM(el, function(node) {
       if ((node.parentNode !== el) && (node !== el) && DOM.isEl(node, els) && DOM.hasParent(node, parents)) {
-        $(node).unwrap();
+        DOM.unwrap([node]);
       }
     });
   },
@@ -2033,7 +2044,7 @@ Toolbar.prototype = {
 
 		// Append and bind to all of our Painter buttons
 		this.painters.forEach(function(painter) {
-	    var button = painter.getDOMButton();
+	     var button = painter.getDOMButton();
 			ul.appendChild(button);
 		
 			// Must be on 'mousedown' VS 'click' due to the speed of loss of focus
@@ -2054,10 +2065,10 @@ Toolbar.prototype = {
 	setInitialState: function() {
 		this.makeQueryable();
   
-		this.attrs.toolbarHeight = $(this.el).outerHeight();
-		this.attrs.toolbarWidth = $(this.el).outerWidth();
-		this.attrs.toolbarArrowLeftOffset = parseInt(getComputedStyle($(this.el).find('.arrow')[0]).left);
-  		this.attrs.toolbarArrowHeight = $(this.el).find('.arrow').outerHeight(); 
+		this.attrs.toolbarHeight = DOM.outerHeight(this.el);
+		this.attrs.toolbarWidth = DOM.outerWidth(this.el);
+		this.attrs.toolbarArrowLeftOffset = parseInt(getComputedStyle(this.el.querySelector('.arrow')).left);
+  		this.attrs.toolbarArrowHeight = DOM.outerHeight(this.el.querySelector('.arrow'));
 
 		this.returnFromQueryable();
 	},
@@ -2103,7 +2114,7 @@ Toolbar.prototype = {
 
 			top: function() {
 				this.el.style.top = ((offset.top + scrollTop) - this.attrs.toolbarHeight - this.attrs.toolbarArrowHeight) + 'px';
-				this.el.style.left = ((offset.left + offset.right) / 2) - ($(this.el).outerWidth() / 2) + 'px';
+				this.el.style.left = ((offset.left + offset.right) / 2) - (this.attrs.toolbarWidth / 2) + 'px';
 			}
 		};
 

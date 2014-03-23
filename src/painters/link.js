@@ -122,7 +122,7 @@ Link.prototype = {
     setTimeout(function() {
       if (url) {
         var start = DOM.getFirstNonTextParent(this.selectionBeforeInput.startContainer);
-        var node = $(start).find('a')[0];
+        var node = start.querySelectorAll('a')[0];
         var range = document.createRange();
         range.selectNode(node);
       }

@@ -138,6 +138,16 @@ var DOM = {
       parent.removeChild(nodes[0]);
       nodes.shift();
     }
+  },
+
+  outerHeight: function(node) {
+    var height = node.offsetHeight;   
+    return height;
+  },
+
+  outerWidth: function(node) {
+    var width = node.offsetWidth;
+    return width;
   }
 };
 

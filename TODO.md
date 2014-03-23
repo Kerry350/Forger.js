@@ -4,7 +4,7 @@
 * ~~Reposition toolbar when painter is applied~~
 * ~~Make hooliganismMode option do stuff~~
 * Fix Blockquote methods
-* Remove jQuery references
+* ~~Remove jQuery references~~
 * ~~Make a 'heading' painter that manages h1, h2 and h3 as a dropdown. I think this will be much nicer.~~ 
 * Build the History manager to manage undo / redo as the browser does it so inconsistently
 * ~~Build the plugin setup~~
@@ -19,3 +19,4 @@
 * Finish / tidy up the CSS
 * All the todos in comments...
 * Allow a way to unlink links
+* Fix hooliganism mode and <li> elements, pressing enter should be allowed here when empty
