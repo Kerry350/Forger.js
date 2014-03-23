@@ -150,6 +150,31 @@ TODO: Docs for this coming soon
 * Lightweight event emitter capabilities are provided by [MicroEvent.js](https://github.com/jeromeetienne/microevent.js).
 * Some CSS animations are provided by [Animate.css](http://daneden.github.io/animate.css/).
 
+# Alternatives 
+
+You might not like Forger.js, and that's okay. There are a lot of WYSIWYG alternatives, if Forger isn't what you're looking for, one of these might be:
+
+### Paid for 
+
+* [Froala](http://editor.froala.com/)
+* [Redactor](http://imperavi.com/redactor/)
+
+### Open source
+
+* [Wymeditor](https://github.com/wymeditor/wymeditor)
+* [Summernote](https://github.com/HackerWins/summernote)
+* [Bootstrap-wysiwyg](https://github.com/mindmup/bootstrap-wysiwyg)
+* [jQuery Notebook](https://github.com/raphaelcruzeiro/jquery-notebook)
+* [Medium.js](https://github.com/jakiestfu/Medium.js/)
+* [Zenpen](https://github.com/tholman/zenpen)
+* [Raptor Editor](https://github.com/PANmedia/raptor-editor)
+* [wysihtml5](https://github.com/xing/wysihtml5)
+
+### Monolithic
+
+* [TinyMCE](http://www.tinymce.com/)
+* [CKEditor](http://ckeditor.com/)
+
 # License 
 
 The MIT License (MIT)
