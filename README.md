@@ -6,15 +6,7 @@ forge:
 * create (something) strong, enduring, or successful.
 * move forward gradually or steadily.
 
-A lightweight editor.
-
-# Where'd the old version go?
-
-There's a detailed explanation of what happened [here](https://kerrygallagher.co.uk/whered-it-go/).
-
-Due to circumstances far beyond my control I had to change the name of this repo, revert / remove all history and rewrite everything. 
-
-Because of this, Forger.js was born.
+A lightweight WYSIWYG editor.
 
 # Demo 
 
@@ -24,7 +16,11 @@ Please bare in mind that there are a few things to fix. I've tried to be super t
 
 # Dependencies
 
-Forger does make use of reMarked.js and MicroEvent.js, these are packaged in the /dist versions for you already. Forger doesn't have a dependency on jQuery, although you are free to make use of the optional jQuery wrapper if you want. 
+Forger does make use of reMarked.js and MicroEvent.js, these are packaged in the `/dist` versions for you already. Forger doesn't have a dependency on jQuery, although you are free to make use of the optional jQuery wrapper if you want. 
+
+# Installation 
+
+Use either the minified version of Forger.js, or the unminified version, linked within the `/dist` directory. I will be adding Forger.js to Bower once it's at a nice stable point. 
 
 # How to use
 
@@ -146,6 +142,7 @@ TODO: Docs for this coming soon
 
 # Credits
 
+* Browserify for CommonJS module functionality
 * HTML to Markdown parsing is provided by [reMarked.js](http://leeoniya.github.io/reMarked.js/) library. 
 * Lightweight event emitter capabilities are provided by [MicroEvent.js](https://github.com/jeromeetienne/microevent.js).
 * Some CSS animations are provided by [Animate.css](http://daneden.github.io/animate.css/).
