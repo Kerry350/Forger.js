@@ -146,6 +146,7 @@ TODO: Docs for this coming soon
 * HTML to Markdown parsing is provided by [reMarked.js](http://leeoniya.github.io/reMarked.js/) library. 
 * Lightweight event emitter capabilities are provided by [MicroEvent.js](https://github.com/jeromeetienne/microevent.js).
 * Some CSS animations are provided by [Animate.css](http://daneden.github.io/animate.css/).
+* classList functionality is provided to older browsers thanks to a shim from Eli Grey, [ClassList.js](https://github.com/eligrey/classList.js/).
 
 # Alternatives 
 

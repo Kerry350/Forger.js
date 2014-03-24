@@ -53,7 +53,7 @@ Editor.prototype = {
       if (this.isEmpty(e)) {
         var p = document.createElement('p');
         p.innerHTML = '&#8203;';
-        this.el.html(p);
+        this.el.appendChild(p);
         this.refocus(p, 0);
       }
     };
