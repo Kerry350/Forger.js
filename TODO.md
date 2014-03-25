@@ -9,7 +9,7 @@
 * ~~Build the plugin setup~~
 * ~~Fix up all content being deleted, i.e. ctrl + a, then backspace, then backspace again~~ (although there's still a janky little jump to fix)
 * ~~Use CommonJS modules (by way of Browserify) for handling dependencies~~
-* ~~Fix hooliganism mode and <li> elements, pressing enter should be allowed here when empty~~
+* ~~Fix hooliganism mode and `<li>` elements, pressing enter should be allowed here when empty~~
 
 # Bugs 
 

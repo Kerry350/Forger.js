@@ -1,0 +1,25 @@
+/* Dead basic styles just so the demo page looks okay */
+body {
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.5;
+  background-color: #f9f9fa
+}
+
+p {
+  margin: 0;
+  margin-bottom: 20px;
+}
+
+#container {
+  width: 900px;
+  margin: 0 auto;
+  font-size: 20px;
+  color: #111;
+  margin-top: 80px;
+}
+
+/* Webkit execCommand applies blockquote styles inline, so we sadly need a higher specificity via !important */
+blockquote {
+  padding-left: 20px !important;
+  border-left: 10px solid #111 !important;
+}

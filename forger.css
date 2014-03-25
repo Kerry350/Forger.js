@@ -1,29 +1,11 @@
-/* Dead basic styles just so the demo page looks okay */
-body {
-  font-family: 'Roboto', sans-serif;
-  line-height: 1.5;
-  background-color: #f9f9fa
+/* Used very temporarily when element dimensions need querying */
+.queryable {
+  left: -9999px !important; 
+  display: block !important;
+  visibility: hidden !important;
 }
 
-p {
-  margin: 0;
-  margin-bottom: 20px;
-}
-
-#container {
-  width: 900px;
-  margin: 0 auto;
-  font-size: 20px;
-  color: #111;
-  margin-top: 80px;
-}
-
-/* Webkit execCommand applies blockquote styles inline, so we sadly need a higher specificity via !important */
-blockquote {
-  padding-left: 20px !important;
-  border-left: 10px solid #111 !important;
-}
-
+/* Base styles */
 .forger {
   min-height: 50px;
   position: relative;
@@ -33,6 +15,7 @@ blockquote {
   outline: none;
 }
 
+/* Toolbar */
 .forger-toolbar {
   background-color: #242424;
   background: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #242424), color-stop(100%, rgba(36,36,36,0.75)));
@@ -41,24 +24,10 @@ blockquote {
   background: -o-linear-gradient(bottom, #242424,rgba(36,36,36,0.75));
   position: absolute;
   height: 40px;
-  display: none;
   border-radius: 5px;
   box-shadow: 0 2px 2px 1px rgba(0,0,0,.35);
-}
-
-/* One of the rare cases where I feel !important is okay, this class is only used very temporarily 
-when element dimensions need querying */
-.queryable {
-  left: -9999px !important; 
-  display: block !important;
-  visibility: hidden !important;
-}
-
-/*.unqueryable {
-  left: 0px;
   display: none;
-  visibility: visible;
-}*/
+}
 
 .forger-toolbar.show {
   -webkit-animation-duration: 0.3s;
@@ -91,6 +60,141 @@ when element dimensions need querying */
   animation-name: fadeOutUp;*/
   display: none;
 }
+
+.forger-toolbar .formatting,
+.forger-toolbar .link {
+  -webkit-transition: all 0.3s ease-out;  
+     -moz-transition: all 0.3s ease-out;  
+       -o-transition: all 0.3s ease-out; 
+          transition: all 0.3s ease-out;
+  float: left;
+  height: 100%;
+}
+
+.forger-toolbar .link {
+  display: none;
+}
+
+.forger-toolbar .link > .link-wrapper {
+  width: 222px;
+  height: 100%;
+  padding: 5px 5px;
+  box-sizing: border-box;
+}
+
+.forger-toolbar .link > .link-wrapper input {
+  width: 160px;
+  margin: 0;
+  padding: 3px 6px;
+  height: 100%;
+  border: none;
+  box-sizing: border-box;
+  display: block;
+  float: left;
+  border-radius: 4px;
+}
+
+.forger-toolbar .link > .link-wrapper input:focus {
+  outline: none;
+}
+
+.forger-toolbar .link > .link-wrapper button {
+  width: 50px;
+  margin: 0;
+  padding: 3px;
+  height: 20px;
+  text-align: center;
+  background: none;
+  display: inline-block;
+  border: none;
+  cursor: pointer;
+  color: #ffffff;
+  height: 100%;
+}
+
+.forger-toolbar .link > .link-wrapper button > i {
+  font-size: 20px;
+}
+
+.forger-toolbar .formatting > ul {
+  margin: 0px;
+  padding: 0px 5px;
+  list-style: none;
+  height: 100%;
+}
+
+
+/* 
+  Forger toolbar arrow
+  There's a few different arrow setups depending on the positioning you want to use 
+*/
+.forger-toolbar .arrow {
+  width: 0px;
+  height: 0px;
+  position: absolute;
+}
+
+.forger-toolbar .arrow.left {
+  border-style: solid;
+  border-width: 0 20px 20px 0;
+  border-color: transparent #242424 transparent transparent;
+  top: 100%;
+  left: 50px;
+}
+
+.forger-toolbar .arrow.down {
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #242424;
+  top: 100%;
+  left: 50%;
+  margin-left: -10px;
+}
+
+/* Toolbar buttons */
+.forger-toolbar li {
+  cursor: pointer;
+  display: inline-block;
+  color: #777777;
+  font-size: 15px;
+  padding: 2px 2px;
+  margin-right: 5px;
+  text-decoration: none;
+  min-width: 20px;
+  text-align: center;  
+  line-height: 40px;
+  position: relative;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.forger-toolbar li:last-child {
+  margin-right: 0;
+}
+
+.forger-toolbar li:hover,
+.forger-toolbar li.active {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+/* Headings (H1, H2, H3 etc) menu */
+.forger-toolbar li i.headings + ul {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #242424;
+  padding: 0;
+  margin: 0;
+}
+
+.forger-toolbar li i.headings + ul > li {
+  display: block;
+  padding: 0 5px;
+  font-size: 14px;
+  margin-right: 0;
+}
+
 
 /* Thanks to the Animate.css library for these! */
 @-webkit-keyframes fadeInDown {
@@ -185,136 +289,6 @@ when element dimensions need querying */
     opacity: 0;
     transform: translateY(-20px);
   }
-}
-
-.forger-toolbar .formatting,
-.forger-toolbar .link {
-  -webkit-transition: all 0.3s ease-out;  
-     -moz-transition: all 0.3s ease-out;  
-       -o-transition: all 0.3s ease-out; 
-          transition: all 0.3s ease-out;
-  float: left;
-  height: 100%;
-}
-
-.forger-toolbar .formatting > ul {
-  margin: 0px;
-  padding: 0px 5px;
-  list-style: none;
-  height: 100%;
-}
-
-
-.forger-toolbar .link {
-  height: 100%;
-  display: none;
-}
-
-.forger-toolbar .link > .link-wrapper {
-  width: 222px;
-  height: 100%;
-  padding: 5px 5px;
-  box-sizing: border-box;
-}
-
-.forger-toolbar .link > .link-wrapper input {
-  width: 160px;
-  margin: 0;
-  padding: 3px 6px;
-  height: 100%;
-  border: none;
-  box-sizing: border-box;
-  display: block;
-  float: left;
-  border-radius: 4px;
-}
-
-.forger-toolbar .link > .link-wrapper input:focus {
-  outline: none;
-}
-
-.forger-toolbar .link > .link-wrapper button {
-  width: 50px;
-  margin: 0;
-  padding: 3px;
-  height: 20px;
-  text-align: center;
-  background: none;
-  display: inline-block;
-  border: none;
-  cursor: pointer;
-  color: #ffffff;
-  height: 100%;
-}
-
-.forger-toolbar .link > .link-wrapper button > i {
-  font-size: 20px;
-}
-
-/* There's a few different arrow setups depending on the positioning you want to use */
-.forger-toolbar .arrow {
-  width: 0px;
-  height: 0px;
-  position: absolute;
-}
-
-.forger-toolbar .arrow.left {
-  border-style: solid;
-  border-width: 0 20px 20px 0;
-  border-color: transparent #242424 transparent transparent;
-  top: 100%;
-  left: 50px;
-}
-
-.forger-toolbar .arrow.down {
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-top: 10px solid #242424;
-  top: 100%;
-  left: 50%;
-  margin-left: -10px;
-}
-
-.forger-toolbar li {
-  cursor: pointer;
-  display: inline-block;
-  color: #777777;
-  font-size: 15px;
-  padding: 2px 2px;
-  margin-right: 5px;
-  text-decoration: none;
-  min-width: 20px;
-  text-align: center;  
-  line-height: 40px;
-  position: relative;
-  height: 100%;
-  box-sizing: border-box;
-}
-
-.forger-toolbar li i.headings + ul {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: #242424;
-  padding: 0;
-  margin: 0;
-}
-
-.forger-toolbar li i.headings + ul > li {
-  display: block;
-  padding: 0 5px;
-  font-size: 14px;
-  margin-right: 0;
-}
-
-.forger-toolbar li:last-child {
-  margin-right: 0;
-}
-
-.forger-toolbar li:hover,
-.forger-toolbar li.active {
-  background-color: #000000;
-  color: #ffffff;
 }
 
 /* Clearfix */
