@@ -1,5 +1,7 @@
 'use strict';
 
+var DOM = require('./dom').DOM;
+
 function Sanitiser (html) {
   this.html = html;
 }

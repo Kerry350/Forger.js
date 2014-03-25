@@ -749,8 +749,8 @@ function Formatter () {
 
 Formatter.prototype = {
   getMarkdown: function(content) {
-	 return new reMarked({h_atx_suf:  true}).render(content);
-	}
+    return new reMarked({h_atx_suf:  true}).render(content);
+  }
 };
 
 module.exports = Formatter;
@@ -1802,6 +1802,8 @@ module.exports = TextSelection;
 },{}],25:[function(require,module,exports){
 'use strict';
 
+var DOM = require('./dom').DOM;
+
 function Sanitiser (html) {
   this.html = html;
 }
@@ -1929,7 +1931,7 @@ Sanitiser.prototype = {
 };
 
 module.exports = Sanitiser;
-},{}],26:[function(require,module,exports){
+},{"./dom":3}],26:[function(require,module,exports){
 var keys = {
 	16: 'shift',
 	17: 'ctrl',

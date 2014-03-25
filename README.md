@@ -130,7 +130,19 @@ This is just a convenience wrapper, you don't have to use it.
 
 # Public Methods
 
-TODO: Docs for methods coming soon
+`var instance = new Forger(document.querySelector('#test'), options);`
+
+### `.HTML()`
+
+Returns the editor's HTML content
+
+`instance.HTML();`
+
+### `.markdown()`
+
+Returns the editor's content in Markdown format
+
+`instance.markdown();`
 
 # Extend with your own 'Painters'
 
