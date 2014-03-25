@@ -586,7 +586,7 @@ Editor.prototype = {
 
     if (this.options.hooliganismDisabled) {
       
-      var node = DOM.getFirstNonTextParent(new TextSelection().getRange().startContainer);
+      var node = DOM.getBlockParent(new TextSelection().getRange().startContainer);
 
       if ((e.keyCode === 13) && !node.textContent.trim() && (node.nodeName.toLowerCase() !== 'li')) {
         e.preventDefault();

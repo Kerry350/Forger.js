@@ -19,5 +19,5 @@
 * Finish / tidy up the CSS
 * All the todos in comments...
 * Allow a way to unlink links
-* Fix hooliganism mode and <li> elements, pressing enter should be allowed here when empty
+* ~~Fix hooliganism mode and <li> elements, pressing enter should be allowed here when empty~~
 * Add to Bower once at a stable point
